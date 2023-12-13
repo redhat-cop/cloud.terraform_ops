@@ -1,5 +1,107 @@
 # cloud.terraform_ops roles/playbooks to create/configure Cloud providers' resources for AAP Terraform integration
 
+This repository hosts the `cloud.terraform_ops` Ansible Collection.
+
+The collection includes a variety of Ansible roles and playbooks, to help automate the management of cloud providers' resources for AAP Terraform integration.
+
+<!--start requires_ansible-->
+## Ansible version compatibility
+
+This collection has been tested against following Ansible versions: **>=2.14.0**.
+
+## Included content
+
+Click on the name of a role or playbook to view that content's documentation:
+
+<!--start collection content-->
+### Roles
+Name | Description
+--- | ---
+[cloud.terraform_ops.aws_setup_credentials](https://github.com/ansible-collections/cloud.aws_ops/blob/main/roles/aws_setup_credentials/README.md)|A role to define credentials for aws modules.
+
+### Playbooks
+Name | Description
+--- | ---
+
+
+## Installation and Usage
+
+### Requirements
+
+The [amazon.aws](https://github.com/ansible-collections/amazon.aws) and [community.aws](https://github.com/ansible-collections/amazon.aws) collections MUST be installed in order for this collection to work.
+
+
+### Installation
+
+To consume this Validated Content from Automation Hub, please ensure that you add the following lines to your ansible.cfg file.
+
+```
+[galaxy]
+server_list = automation_hub
+
+[galaxy_server.automation_hub]
+url=https://cloud.redhat.com/api/automation-hub/
+auth_url=https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
+token=<SuperSecretToken>
+```
+The token can be obtained from the [Automation Hub Web UI](https://console.redhat.com/ansible/automation-hub/token).
+
+Once the above steps are done, you can run the following command to install the collection.
+
+```
+ansible-galaxy collection install cloud.terraform_ops
+```
+
+### Using this collection
+
+Once installed, you can reference the cloud.aws_ops collection content by its fully qualified collection name (FQCN), for example:
+
+```yaml
+  - hosts: all
+    tasks:
+      - name: Include 'enable_cloudtrail_encryption_with_kms' role
+        ansible.builtin.include_role:
+          name: cloud.aws_ops.enable_cloudtrail_encryption_with_kms
+        vars:
+          enable_cloudtrail_encryption_with_kms_trail_name: "{{ cloudtrail_name }}"
+          enable_cloudtrail_encryption_with_kms_kms_key_id: "{{ kms_alias }}"
+```
+
+### See Also
+
+* [Ansible Using collections](https://docs.ansible.com/ansible/latest/user_guide/collections_using.html) for more details.
+
+## Contributing to this collection
+
+We welcome community contributions to this collection. If you find problems, please open an issue or create a PR against this collection repository.
+
+### Testing and Development
+
+The project uses `ansible-lint` and `black`.
+Assuming this repository is checked out in the proper structure,
+e.g. `collections_root/ansible_collections/cloud/aws_ops/`, run:
+
+```shell
+  tox -e linters -vv
+```
+
+Sanity and unit tests are run as normal:
+
+```shell
+  ansible-test sanity
+```
+
+If you want to run AWS cloud integration tests, ensure you log in :
+
+```shell
+# using the "default" profile on AWS
+  aws configure set aws_access_key_id     my-access-key
+  aws configure set aws_secret_access_key my-secret-key
+  aws configure set region                eu-north-1
+
+  ansible-test integration [target]
+```
+
 ## License
 
 GNU General Public License v3.0 or later

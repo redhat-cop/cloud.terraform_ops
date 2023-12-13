@@ -1,0 +1,40 @@
+---
+argument_specs:
+  main:
+    version_added: 1.0.0
+    short_description: A role to create/delete the AWS infrastructure for an S3 remote backend for Terraform.
+    description:
+      - A role to ensure that the necessary AWS infrastructure is present/absent for an S3 remote backend for Terraform.
+      - When creating, the S3 bucket will be created with the required permissions for Terraform. See U(https://developer.hashicorp.com/terraform/language/settings/backends/s3#s3-bucket-permissions).
+      - The role also allow for optionally creating a DynamoDB table with the required permissions for state locking and with a partition key named LockID with type of String.
+    options:
+      aws_s3backend_operation:
+        description:
+          - Whether to create or delete the Backend resources (S3 bucket and DynamoDB table).
+        choices:
+          - create
+          - delete
+        default: create
+      aws_s3backend_bucket_name:
+        description:
+          - The name of the S3 bucket to create/delete.
+        required: true
+      aws_s3backend_dynamodb_table_name:
+        description:
+          - The name of the DynamoDB table to create/delete for state locking.
+          - The table will be created with a partition key named LockID with type of String.
+        type: str
+      aws_s3backend_iam_type:
+        description:
+          - The type of IAM resource to grant access to.
+        choices: [ "user", "group", "role"]
+        type: str
+      aws_s3backend_iam_name:
+        description:
+          - The user name, group name or role name of IAM resource you wish to grant access to S3 and DynamoDB.
+          - Required When I(aws_s3backend_iam_type) is provided.
+        type: str
+      aws_s3backend_terraform_state_path:
+        description:
+          - Object path granted to the specified user/role/group.
+          - When not specified, user/role/group will be allowed to create state file anywhere into the bucket.

@@ -1,0 +1,3 @@
+---
+- name: Create/Configure/Delete AWS infrastructure for S3 Remote backend
+  ansible.builtin.include_tasks: "{{ aws_s3backend_operation }}.yml"

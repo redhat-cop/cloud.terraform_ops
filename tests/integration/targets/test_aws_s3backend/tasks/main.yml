@@ -1,0 +1,153 @@
+---
+- module_defaults:
+    group/aws:
+      region: "{{ aws_region | default(omit) }}"
+      access_key: "{{ aws_access_key }}"
+      secret_key: "{{ aws_secret_key }}"
+      session_token: "{{ security_token | default(omit) }}"
+  environment:
+    AWS_ACCESS_KEY_ID: "{{ aws_access_key | default(omit) }}"
+    AWS_SECRET_ACCESS_KEY: "{{ aws_secret_key | default(omit) }}"
+    AWS_SESSION_TOKEN: "{{ security_token | default(omit) }}"
+    AWS_REGION: "{{ aws_region | default(omit) }}"
+  name: Test Role 'aws_s3backend'
+  block:
+    # Test: Create S3 bucket only
+    - name: Create S3 backend for Terraform state storage
+      ansible.builtin.include_role:
+        name: cloud.terraform_ops.aws_s3backend
+
+    - name: Ensure S3 bucket has been created with versioning enabled
+      amazon.aws.s3_bucket_info:
+        name: "{{ aws_s3backend_bucket_name }}"
+        bucket_facts:
+          bucket_versioning: true
+      register: testbucket
+
+    - name: Validate that versioning has been enabled into bucket
+      ansible.builtin.assert:
+        that:
+          - testbucket.buckets | length == 1
+          - testbucket.buckets[0].bucket_versioning.Status == 'Enabled'
+
+    - name: Use S3 bucket as Terraform backend
+      vars:
+        tfstate_file_path: "initial/terraform.tfstate"
+      block:
+        - name: Create temporary directory to run Terraform configuration
+          ansible.builtin.tempfile:
+            state: directory
+            suffix: .terraform
+          register: tfpath
+
+        - name: Generate Terraform configuration
+          ansible.builtin.template:
+            src: 'main.tf.j2'
+            dest: "{{ tfpath.path }}/main.tf"
+
+        - name: Apply Terraform configuration
+          cloud.terraform.terraform:
+            state: present
+            project_path: "{{ tfpath.path }}"
+            force_init: true
+
+        - name: Ensure Terraform state file has been stored into bucket
+          amazon.aws.s3_object_info:
+            bucket_name: "{{ aws_s3backend_bucket_name }}"
+            object_name: "{{ tfstate_file_path }}"
+          register: object_info
+
+      always:
+        - name: Delete temporary directory
+          ansible.builtin.file:
+            state: absent
+            path: "{{ tfpath.path }}"
+
+    # Test: Create S3 bucket with DynamoDB for state lock
+    - name: Test create S3 backend with DynamoDB for state lock
+      vars:
+        aws_s3backend_dynamodb_table_name: "db-{{ resource_prefix }}"
+        tfstate_file_path: "locking/terraform.tfstate"
+      block:
+        - name: Create S3 backend for Terraform state storage
+          ansible.builtin.include_role:
+            name: cloud.terraform_ops.aws_s3backend
+
+        - name: Read dynamodb table info
+          community.aws.dynamodb_table_info:
+            name: "{{ aws_s3backend_dynamodb_table_name }}"
+          register: table_info
+
+        - name: Assert that the table has been created with the required attributes
+          ansible.builtin.assert:
+            that:
+              - table_info.table
+              - 'table_info.table.attribute_definitions == [{"attribute_name": "LockID", "attribute_type": "S"}]'
+              - table_info.table.table_status == 'ACTIVE'
+              - table_info.table.item_count == 0
+
+        - name: Create temporary directory to run Terraform configuration
+          ansible.builtin.tempfile:
+            state: directory
+            suffix: .terraform
+          register: tfpath
+
+        - name: Generate Terraform configuration
+          ansible.builtin.template:
+            src: 'main.tf.j2'
+            dest: "{{ tfpath.path }}/main.tf"
+
+        - name: Apply Terraform configuration
+          cloud.terraform.terraform:
+            state: present
+            project_path: "{{ tfpath.path }}"
+            force_init: true
+
+        - name: Ensure Terraform state file has been stored into bucket
+          amazon.aws.s3_object_info:
+            bucket_name: "{{ aws_s3backend_bucket_name }}"
+            object_name: "{{ tfstate_file_path }}"
+          register: object_info
+
+        # Test: Delete S3 bucket and DynamoDB table
+        - name: Create S3 bucket for Terraform state storage
+          ansible.builtin.include_role:
+            name: cloud.terraform_ops.aws_s3backend
+          vars:
+            aws_s3backend_operation: delete
+
+        - name: Ensure S3 bucket has been deleted
+          amazon.aws.s3_bucket_info:
+            name: "{{ aws_s3backend_bucket_name }}"
+            bucket_facts:
+              bucket_versioning: true
+          register: testbucket
+
+        - name: Validate that s3 bucket was delete
+          ansible.builtin.assert:
+            that:
+              - testbucket.buckets | length == 0
+
+        # Validate that the DynamoDB table has been deleted
+        - name: Read dynamodb table info
+          community.aws.dynamodb_table_info:
+            name: "{{ aws_s3backend_dynamodb_table_name }}"
+          register: table_info
+
+        - name: Assert that the dynamodb table was deleted
+          ansible.builtin.assert:
+            that:
+              - not table_info.table
+
+      always:
+        - name: Delete temporary directory
+          ansible.builtin.file:
+            state: absent
+            path: "{{ tfpath.path }}"
+
+  always:
+    - name: Create S3 backend for Terraform state storage
+      ansible.builtin.include_role:
+        name: cloud.terraform_ops.aws_s3backend
+      vars:
+        aws_s3backend_operation: delete
