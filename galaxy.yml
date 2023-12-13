@@ -1,0 +1,29 @@
+---
+authors:
+  - Ansible (https://github.com/ansible)
+description: >-
+  A set of Roles and Playbooks used to create/configure Cloud providers'
+  resources as part of AAP Terraform integration.
+documentation: ''
+homepage: ''
+issues: https://github.com/ansible-collections/cloud.terraform_ops/issues
+license_file: LICENSE
+namespace: cloud
+name: terraform_ops
+readme: README.md
+repository: https://github.com/ansible-collections/cloud.terraform_ops
+tags:
+  - amazon
+  - aws
+  - cloud
+  - infrastructure
+  - cluster
+dependencies:
+  amazon.aws: '>=5.1.0'
+  community.aws: '>=5.0.0'
+version: 0.1.0-dev0
+build_ignore:
+  - .DS_Store
+  - '*.tar.gz'
+  - '*cloud-config-*.ini'
+  - '*cloud-config-*.yml'

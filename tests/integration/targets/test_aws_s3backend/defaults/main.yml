@@ -1,0 +1,2 @@
+---
+aws_s3backend_bucket_name: "state-{{ resource_prefix }}"
