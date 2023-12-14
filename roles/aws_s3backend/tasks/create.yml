@@ -27,6 +27,6 @@
     iam_type: "{{ aws_s3backend_iam_type }}"
     iam_name: "{{ aws_s3backend_iam_name }}"
     policy_name: "{{ aws_s3backend_policy_name }}"
-    policy_json: "{{ lookup('template', 'policy.json.j2' ) }}"
+    policy_json: "{{ lookup('template', 'policy.json.j2') }}"
     state: present
   when: aws_s3backend_iam_type is defined
