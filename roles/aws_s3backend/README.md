@@ -1,48 +1,35 @@
-# awsconfig_apigateway_with_lambda_integration
+# aws_s3backend
 
-A role to create/delete an API gateway with lambda function integration.
-the role produces variables **awsconfig_apigateway_with_lambda_integration\_\_invoke_url** that contains the URL to invoke API gateway and **awsconfig_apigateway_with_lambda_integration\_\_id** that contains the id of the API gateway created.
+A role to ensure that the necessary AWS infrastructure is present/absent for an S3 remote backend for Terraform.
+When creating, the S3 bucket will be created with the required permissions for Terraform. See U(https://developer.hashicorp.com/terraform/language/settings/backends/s3#s3-bucket-permissions).
+The role also allow for optionally creating a DynamoDB table with the required permissions for state locking and with a partition key named LockID with type of String.
 
 ## Requirements
 
-AWS User Account with permission to create API gateway, lambda function and IAM role.
+AWS User Account with permission to create S3 bucket, DynamoDB table and IAM policy.
 
 ## Role Variables
 
-- **awsconfig_apigateway_with_lambda_integration_operation**: Whether to create or delete the API gateway. Choices: 'create', 'delete'. Default: 'create'.
-- **awsconfig_apigateway_with_lambda_integration_api_name**: The name of the API gateway to create/delete.
-- **awsconfig_apigateway_with_lambda_integration_id**: string identifier of the API gateway to update/delete.
-- **awsconfig_apigateway_with_lambda_integration_tags**: collection of tags associated to the API gateway, this is used to ensure unique API gateway is created/deleted while running multiple times. Provided as dictionnary.
-- **awsconfig_apigateway_with_lambda_integration_lambda_runtime**: The lambda function runtime. e.g: 'python3.8'
-- **awsconfig_apigateway_with_lambda_integration_lambda_function_file**: The path to a valid file containing the code of the lambda function.
-- **awsconfig_apigateway_with_lambda_integration_lambda_handler**: The lambda function handler. e.g: 'hello.lambda_handler'
-- **awsconfig_apigateway_with_lambda_integration_stage_name**: The name for the Stage resource. Stage names can only contain alphanumeric characters, hyphens, and underscores. Maximum length is 128 characters.
-
-## Dependencies
-
-- role: [aws_setup_credentials](../aws_setup_credentials/README.md)
+- **aws_s3backend_operation**: Whether to create or delete the Backend resources (S3 bucket and DynamoDB table). Choices: 'create', 'delete'. Default: 'create'.
+- **aws_s3backend_bucket_name**: The name of the S3 bucket to create/delete. **Required**
+- **aws_s3backend_dynamodb_table_name**: The name of the DynamoDB table to create/delete for state locking. The table will be created with a partition key named LockID with type of String.
+- **aws_s3backend_iam_type**: The type of IAM resource to grant access to. Choices: 'user', 'group', 'role'.
+- **aws_s3backend_iam_name**: The user name, group name or role name of IAM resource you wish to grant access to S3 and DynamoDB. Required when I(aws_s3backend_iam_type) is provided.
+- **aws_s3backend_terraform_state_path**: Object path granted to the specified user/role/group.
 
 ## Example Playbook
 
     - hosts: localhost
       roles:
-        - role: cloud.aws_ops.awsconfig_apigateway_with_lambda_integration
-          aws_access_key: xxxxxxxxxxx
-          aws_secret_key: xxxxxxxxxxx
-          aws_region: xxxxxxxx
-          awsconfig_apigateway_with_lambda_integration_operation: create
-          awsconfig_apigateway_with_lambda_integration_api_name: hello
-          awsconfig_apigateway_with_lambda_integration_tags:
-            automation: ansible
-          awsconfig_apigateway_with_lambda_integration_lambda_runtime: 'python3.8'
-          awsconfig_apigateway_with_lambda_integration_lambda_handler: 'hello.lambda_handler'
-          awsconfig_apigateway_with_lambda_integration_lambda_function_file: hello.py
+        - role: cloud.terraform_ops.aws_s3backend
+          aws_s3backend_bucket_name: test_terraform_s3
+          aws_s3backend_dynamodb_table_name: db_state_lock
 
 ## License
 
 GNU General Public License v3.0 or later
 
-See [LICENCE](https://github.com/ansible-collections/cloud.aws_ops/blob/main/LICENSE) to see the full text.
+See [LICENCE](https://github.com/ansible-collections/cloud.terraform_ops/blob/main/LICENSE) to see the full text.
 
 ## Author Information
 

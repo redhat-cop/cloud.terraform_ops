@@ -17,11 +17,7 @@ Click on the name of a role or playbook to view that content's documentation:
 ### Roles
 Name | Description
 --- | ---
-[cloud.terraform_ops.aws_setup_credentials](https://github.com/ansible-collections/cloud.aws_ops/blob/main/roles/aws_setup_credentials/README.md)|A role to define credentials for aws modules.
-
-### Playbooks
-Name | Description
---- | ---
+[cloud.terraform_ops.aws_s3backend](https://github.com/ansible-collections/cloud.terraform_ops/blob/main/roles/aws_s3backend/README.md)|A role to create the necessary AWS infrastructure for an S3 remote backend for Terraform.
 
 
 ## Installation and Usage
@@ -54,17 +50,14 @@ ansible-galaxy collection install cloud.terraform_ops
 
 ### Using this collection
 
-Once installed, you can reference the cloud.aws_ops collection content by its fully qualified collection name (FQCN), for example:
+Once installed, you can reference the cloud.terraform_ops collection content by its fully qualified collection name (FQCN), for example:
 
 ```yaml
   - hosts: all
-    tasks:
-      - name: Include 'enable_cloudtrail_encryption_with_kms' role
-        ansible.builtin.include_role:
-          name: cloud.aws_ops.enable_cloudtrail_encryption_with_kms
-        vars:
-          enable_cloudtrail_encryption_with_kms_trail_name: "{{ cloudtrail_name }}"
-          enable_cloudtrail_encryption_with_kms_kms_key_id: "{{ kms_alias }}"
+
+    roles:
+      - role: cloud.terraform_ops.aws_s3backend
+        aws_s3backend_bucket_name: sample_bucket_for_tf_backend
 ```
 
 ### See Also
@@ -79,7 +72,7 @@ We welcome community contributions to this collection. If you find problems, ple
 
 The project uses `ansible-lint` and `black`.
 Assuming this repository is checked out in the proper structure,
-e.g. `collections_root/ansible_collections/cloud/aws_ops/`, run:
+e.g. `collections_root/ansible_collections/cloud/terraform_ops/`, run:
 
 ```shell
   tox -e linters -vv
@@ -106,4 +99,4 @@ If you want to run AWS cloud integration tests, ensure you log in :
 
 GNU General Public License v3.0 or later
 
-See [LICENSE](https://github.com/ansible-collections/cloud.aws_ops/blob/main/LICENSE) to see the full text.
+See [LICENSE](https://github.com/ansible-collections/cloud.terraform_ops/blob/main/LICENSE) to see the full text.
