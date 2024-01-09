@@ -88,12 +88,28 @@ jobs:
         with:
           python-version: ${{ env.python_version }}
 
-      # install ansible
+      # Install ansible
       - name: Install ansible-core (${{ env.ansible_version }})
         run: >-
           python3 -m pip install
           https://github.com/ansible/ansible/archive/${{ env.ansible_version }}.tar.gz
           --disable-pip-version-check
+        shell: bash
+
+      # Install Terraform binary
+      - name: Download terraform binary
+        run: >-
+          curl
+          -o terraform.zip
+          https://releases.hashicorp.com/terraform/1.6.3/terraform_1.6.3_linux_amd64.zip
+        shell: bash
+
+      - name: Install terraform binary
+        run: |-
+          zcat terraform.zip > terraform
+          chmod +x terraform
+          sudo mv terraform /usr/bin
+          terraform -v
         shell: bash
 
       - name: Pre install collections dependencies first so the collection install does not
