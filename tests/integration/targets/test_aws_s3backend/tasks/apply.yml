@@ -1,0 +1,36 @@
+---
+- environment:
+    AWS_ACCESS_KEY_ID: "{{ aws_access_key | default(omit) }}"
+    AWS_SECRET_ACCESS_KEY: "{{ aws_secret_key | default(omit) }}"
+    AWS_SESSION_TOKEN: "{{ security_token | default(omit) }}"
+    AWS_REGION: "{{ aws_region | default(omit) }}"
+  name: Apply Terraform configuration with S3 backend
+  block:
+    - name: Create temporary directory to run Terraform configuration
+      ansible.builtin.tempfile:
+        state: directory
+        suffix: .terraform
+      register: tfpath
+
+    - name: Generate Terraform configuration
+      ansible.builtin.template:
+        src: 'main.tf.j2'
+        dest: "{{ tfpath.path }}/main.tf"
+
+    - name: Apply Terraform configuration
+      cloud.terraform.terraform:
+        state: present
+        project_path: "{{ tfpath.path }}"
+        force_init: true
+
+    - name: Ensure Terraform state file has been stored into bucket
+      amazon.aws.s3_object_info:
+        bucket_name: "{{ aws_s3backend_bucket_name }}"
+        object_name: "{{ tfstate_file_path }}"
+      register: object_info
+
+  always:
+    - name: Delete temporary directory
+      ansible.builtin.file:
+        state: absent
+        path: "{{ tfpath.path }}"

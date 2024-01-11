@@ -22,8 +22,12 @@ AWS User Account with permission to create S3 bucket, DynamoDB table and IAM pol
     - hosts: localhost
       roles:
         - role: cloud.terraform_ops.aws_s3backend
+          aws_s3backend_operation: create
           aws_s3backend_bucket_name: test_terraform_s3
           aws_s3backend_dynamodb_table_name: db_state_lock
+          aws_s3backend_iam_type: user
+          aws_s3backend_iam_name: ansible
+          aws_s3backend_terraform_state_path: /test/terraform.tfstate
 
 ## License
 

@@ -1,0 +1,50 @@
+---
+# Test: Create S3 bucket only
+- name: Create S3 backend for Terraform state storage
+  ansible.builtin.include_role:
+    name: cloud.terraform_ops.aws_s3backend
+
+- name: Ensure S3 bucket has been created with versioning enabled
+  amazon.aws.s3_bucket_info:
+    name: "{{ aws_s3backend_bucket_name }}"
+    bucket_facts:
+      bucket_versioning: true
+  register: testbucket
+
+- name: Validate that versioning has been enabled into bucket
+  ansible.builtin.assert:
+    that:
+      - testbucket.buckets | length == 1
+      - testbucket.buckets[0].bucket_versioning.Status == 'Enabled'
+
+- name: Apply Terraform configuration using S3 backend
+  ansible.builtin.include_tasks: apply.yml
+  vars:
+    tfstate_file_path: "initial/terraform.tfstate"
+
+# Test: Create S3 bucket with DynamoDB for state lock
+- name: Set variable for DynamoDB table name
+  ansible.builtin.set_fact:
+    aws_s3backend_dynamodb_table_name: "db-{{ resource_prefix }}"
+
+- name: Create S3 backend with DynamoDB table
+  ansible.builtin.include_role:
+    name: cloud.terraform_ops.aws_s3backend
+
+- name: Read dynamodb table info
+  community.aws.dynamodb_table_info:
+    name: "{{ aws_s3backend_dynamodb_table_name }}"
+  register: table_info
+
+- name: Assert that the table has been created with the required attributes
+  ansible.builtin.assert:
+    that:
+      - table_info.table
+      - 'table_info.table.attribute_definitions == [{"attribute_name": "LockID", "attribute_type": "S"}]'
+      - table_info.table.table_status == 'ACTIVE'
+      - table_info.table.item_count == 0
+
+- name: Apply Terraform configuration using S3 backend with DynamoDB table for state locking
+  ansible.builtin.include_tasks: apply.yml
+  vars:
+    tfstate_file_path: "locking/terraform.tfstate"
