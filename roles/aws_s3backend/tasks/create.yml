@@ -15,7 +15,7 @@
     table_class: 'STANDARD'
   when: aws_s3backend_dynamodb_table_name is defined
 
-- name: create/assign policy to the IAM user/role/group
+- name: Create/Assign policy to the IAM user/role/group
   when: aws_s3backend_iam_type is defined
   block:
     - name: Create/Assign policy to the IAM role

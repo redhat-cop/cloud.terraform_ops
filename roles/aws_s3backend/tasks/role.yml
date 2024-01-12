@@ -2,13 +2,13 @@
 - name: Gather IAM Role info
   amazon.aws.iam_role_info:
     name: "{{ aws_s3backend_iam_name }}"
-  register: roles
+  register: existing_roles
 
 - name: Create Role with policy
   amazon.aws.iam_role:
     name: "{{ aws_s3backend_iam_name }}"
-    assume_role_policy_document: "{{ lookup('file','policy.json') }}"
-  when: roles.iam_roles | length == 0
+    state: present
+  when: existing_roles.iam_roles | length == 0
 
 - name: Apply policy to Role
   amazon.aws.iam_policy:
@@ -17,4 +17,3 @@
     policy_name: "{{ aws_s3backend_policy_name }}"
     policy_json: "{{ lookup('template', 'policy.json.j2') }}"
     state: present
-  when: roles.iam_roles | length > 0
