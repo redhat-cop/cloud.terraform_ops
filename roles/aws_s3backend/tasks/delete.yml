@@ -19,3 +19,27 @@
     policy_name: "{{ aws_s3backend_policy_name }}"
     state: absent
   when: aws_s3backend_iam_type is defined
+
+- name: Delete IAM user
+  amazon.aws.iam_user:
+    name: "{{ aws_s3backend_iam_name }}"
+    state: absent
+  when:
+    - aws_s3backend_delete_iam_resource | bool
+    - aws_s3backend_iam_type | default('') == "user"
+
+- name: Delete IAM role
+  amazon.aws.iam_role:
+    name: "{{ aws_s3backend_iam_name }}"
+    state: absent
+  when:
+    - aws_s3backend_delete_iam_resource | bool
+    - aws_s3backend_iam_type | default('') == "role"
+
+- name: Delete IAM group
+  amazon.aws.iam_group:
+    name: "{{ aws_s3backend_iam_name }}"
+    state: absent
+  when:
+    - aws_s3backend_delete_iam_resource | bool
+    - aws_s3backend_iam_type | default('') == "group"

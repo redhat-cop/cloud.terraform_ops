@@ -1,11 +1,4 @@
 ---
-- name: Fail when 'aws_s3backend_iam_name' is undefined
-  ansible.builtin.fail:
-    msg: "'aws_s3backend_iam_name' is required when 'aws_s3backend_iam_type' is provided."
-  when:
-    - aws_s3backend_iam_name is undefined
-    - aws_s3backend_iam_type is defined
-
 - name: Create S3 bucket with versioning enabled
   amazon.aws.s3_bucket:
     name: "{{ aws_s3backend_bucket_name }}"
@@ -22,11 +15,13 @@
     table_class: 'STANDARD'
   when: aws_s3backend_dynamodb_table_name is defined
 
-- name: Apply policy to user/role/group
-  amazon.aws.iam_policy:
-    iam_type: "{{ aws_s3backend_iam_type }}"
-    iam_name: "{{ aws_s3backend_iam_name }}"
-    policy_name: "{{ aws_s3backend_policy_name }}"
-    policy_json: "{{ lookup('template', 'policy.json.j2') }}"
-    state: present
+- name: create/assign policy to the IAM user/role/group
   when: aws_s3backend_iam_type is defined
+  block:
+    - name: Create/Assign policy to the IAM role
+      ansible.builtin.include_tasks: role.yml
+      when: aws_s3backend_iam_type == "role"
+
+    - name: Create/Assign policy to the IAM user/group
+      ansible.builtin.include_tasks: user_or_group.yml
+      when: aws_s3backend_iam_type in ("user", "group")

@@ -1,3 +1,10 @@
 ---
+- name: Ensure 'aws_s3backend_iam_name' is provided when 'aws_s3backend_iam_type' is provided
+  ansible.builtin.fail:
+    msg: "'aws_s3backend_iam_name' is required when 'aws_s3backend_iam_type' is provided."
+  when:
+    - aws_s3backend_iam_name is undefined
+    - aws_s3backend_iam_type is defined
+
 - name: Create/Configure/Delete AWS infrastructure for S3 Remote backend
   ansible.builtin.include_tasks: "{{ aws_s3backend_operation }}.yml"

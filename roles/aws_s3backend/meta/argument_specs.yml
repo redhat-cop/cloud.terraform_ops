@@ -24,6 +24,12 @@ argument_specs:
           - The name of the DynamoDB table to create/delete for state locking.
           - The table will be created with a partition key named LockID with type of String.
         type: str
+      aws_s3backend_delete_iam_resource:
+        description:
+          - Whether to delete or not the IAM resource along with the S3 and DynamoDB table while I(aws_s3backend_operation=delete).
+          - Ignored when I(aws_s3backend_operation=create).
+        type: bool
+        default: false
       aws_s3backend_iam_type:
         description:
           - The type of IAM resource to grant access to.
