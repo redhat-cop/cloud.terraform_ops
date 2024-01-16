@@ -38,6 +38,7 @@ argument_specs:
       aws_s3backend_iam_name:
         description:
           - The user name, group name or role name of IAM resource you wish to grant access to S3 and DynamoDB.
+          - The specified user/role/group name will be created if it does not exist.
           - Required When I(aws_s3backend_iam_type) is provided.
         type: str
       aws_s3backend_terraform_state_path:
