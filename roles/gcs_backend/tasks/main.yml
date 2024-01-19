@@ -1,0 +1,13 @@
+---
+- name: Run 'gcs_backend' role
+  block:
+    - name: Ensure required parameters are proivided
+      ansible.builtin.fail:
+        msg: "Please provide required parameters: gcs_backend_bucket_name, gcs_backend_gcp_project, gcs_backend_service_account_file"
+      when:
+        - gcs_backend_bucket_name is undefined
+        - gcs_backend_gcp_project is undefined
+        - gcs_backend_service_account_file is undefined
+
+    - name: Include task file to perform specified action
+      ansible.builtin.include_tasks: "{{ operation }}.yml"
