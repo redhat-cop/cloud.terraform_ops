@@ -1,6 +1,6 @@
 ---
 # Test: Delete S3 bucket and DynamoDB table
-- name: Create S3 bucket for Terraform state storage
+- name: Delete S3 bucket for Terraform state storage
   ansible.builtin.include_role:
     name: cloud.terraform_ops.aws_s3backend
   vars:
