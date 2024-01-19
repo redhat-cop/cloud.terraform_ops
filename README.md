@@ -24,7 +24,7 @@ Name | Description
 
 ### Requirements
 
-The [amazon.aws](https://github.com/ansible-collections/amazon.aws) and [community.aws](https://github.com/ansible-collections/amazon.aws) collections MUST be installed in order for this collection to work.
+The [amazon.aws](https://github.com/ansible-collections/amazon.aws) and [community.aws](https://github.com/ansible-collections/amazon.aws) collections MUST be installed to use the role [cloud.terraform_ops.aws_s3backend](https://github.com/ansible-collections/cloud.terraform_ops/blob/main/roles/aws_s3backend/README.md).
 
 
 ### Installation
