@@ -1,0 +1,42 @@
+---
+# This test is unsupported for now due to lack of permissions with the CI account
+- name: Test AWS S3 Terraform backend with Role creation
+  vars:
+    aws_s3backend_iam_name: "role-{{ resource_prefix }}"
+    aws_s3backend_bucket_name: "{{ resource_prefix }}-tfstate"
+    aws_s3backend_iam_type: role
+  block:
+    - name: Test 'cloud.terraform_ops.aws_s3backend' with Role creation
+      ansible.builtin.import_role:
+        name: cloud.terraform_ops.aws_s3backend
+
+    # Validate that the role has been created with expected policies
+    - name: Gather Role information
+      amazon.aws.iam_policy_info:
+        iam_type: role
+        iam_name: "{{ aws_s3backend_iam_name }}"
+      register: policies
+
+    - name: Assert the S3 policy was assigned to the role
+      assert:
+        that:
+          - policies.policy_names | length > 0
+          - aws_s3backend_policy_name in policies.policy_names
+
+    # Delete bucket and IAM Role
+    - name: Test 'cloud.terraform_ops.aws_s3backend' with Role creation
+      ansible.builtin.include_role:
+        name: cloud.terraform_ops.aws_s3backend
+      vars:
+        aws_s3backend_operation: delete
+        aws_s3backend_delete_iam_resource: true
+
+    - name: Ensure the IAM role was deleted
+      amazon.aws.iam_role_info:
+        name: "{{ aws_s3backend_iam_name }}"
+      register: role_info
+
+    - name: Assert that the Role was deleted
+      assert:
+        that:
+          - role_info.iam_roles | length == 0
