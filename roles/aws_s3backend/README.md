@@ -11,13 +11,15 @@ AWS User Account with permission to create S3 bucket, DynamoDB table and IAM pol
 
 ## Role Variables
 
-- **aws_s3backend_operation**: Whether to create or delete the Backend resources (S3 bucket and DynamoDB table). Choices: 'create', 'delete'. Default: 'create'.
-- **aws_s3backend_bucket_name**: The name of the S3 bucket to create/delete. **Required**
-- **aws_s3backend_dynamodb_table_name**: The name of the DynamoDB table to create/delete for state locking. The table will be created with a partition key named LockID with type of String.
-- **aws_s3backend_iam_type**: The type of IAM resource to grant access to. Choices: 'user', 'group', 'role'.
-- **aws_s3backend_iam_name**: The name of the IAM resource (user, group or role)user name, group name or role name of IAM resource you wish to grant access to S3 and DynamoDB. Note that, if the specified resource does not exist, it will be created. Required when I(aws_s3backend_iam_type) is provided.
-- **aws_s3backend_terraform_state_path**: Object path granted to the specified user/role/group.
-- **aws_s3backend_delete_iam_resource**: On deletion, specifies whether the IAM resource (user, role or group) should be deleted along with the other resources (S3 bucket and DynamoDB table).
+Name | Description | Type | Default | Required
+--- | --- | --- | --- | ---
+aws_s3backend_operation|Whether to create or delete the Backend resources (S3 bucket and DynamoDB table). Choices: 'create', 'delete'.|string|create| N/A
+aws_s3backend_bucket_name|The name of the S3 bucket to create/delete.|string|N/A|Yes
+aws_s3backend_dynamodb_table_name|The name of the DynamoDB table to create/delete for state locking. The table will be created with a partition key named LockID with type of String|string|N/A|No
+aws_s3backend_iam_type|The type of IAM resource to grant access to. Choices: 'user', 'group', 'role'|string|N/A|No
+aws_s3backend_iam_name|The name of the IAM resource (user, group or role)user name, group name or role name of IAM resource you wish to grant access to S3 and DynamoDB. Note that, if the specified resource does not exist, it will be created.|string|N/A|when __aws_s3backend_iam_type__ is provided.
+aws_s3backend_terraform_state_path|Object path granted to the specified user/role/group.|string|N/A|No
+aws_s3backend_delete_iam_resource|On deletion, specifies whether the IAM resource (user, role or group) should be deleted along with the other resources (S3 bucket and DynamoDB table).|bool|False|No
 
 ## Example Playbook
 

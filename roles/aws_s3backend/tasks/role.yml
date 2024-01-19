@@ -7,6 +7,7 @@
 - name: Create Role with policy
   amazon.aws.iam_role:
     name: "{{ aws_s3backend_iam_name }}"
+    assume_role_policy_document: "{{ lookup('file', 'role-policy.json') }}"
     state: present
   when: existing_roles.iam_roles | length == 0
 

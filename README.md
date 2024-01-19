@@ -62,7 +62,7 @@ Once installed, you can reference the cloud.terraform_ops collection content by 
 
 ### See Also
 
-* [Ansible Using collections](https://docs.ansible.com/ansible/latest/user_guide/collections_using.html) for more details.
+* [Using Ansible collections](https://docs.ansible.com/ansible/latest/user_guide/collections_using.html) for more details.
 
 ## Contributing to this collection
 
