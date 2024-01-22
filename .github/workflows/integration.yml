@@ -96,26 +96,12 @@ jobs:
           --disable-pip-version-check
         shell: bash
 
-      # # Install Terraform binary
-      # - name: Instal Terraform binary
-      #   uses: hashicorp/setup-terraform@v3
-      #   with:
-      #     terraform_version: ">1.7.0"
-
-      - name: Download terraform binary
-        run: >-
-          curl
-          -o terraform.zip
-          https://releases.hashicorp.com/terraform/1.6.3/terraform_1.6.3_linux_amd64.zip
-        shell: bash
-
-      - name: Install terraform binary
-        run: |-
-          zcat terraform.zip > terraform
-          chmod +x terraform
-          sudo mv terraform /usr/bin
-          terraform -v
-        shell: bash
+      # Install Terraform binary
+      - name: Install Terraform binary
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+          terraform_version: "1.6.3"
 
       - name: Pre install collections dependencies first so the collection install does not
         run: ansible-galaxy collection install --pre '-r${{ env.source }}/tests/integration/requirements.yml' -p /home/runner/collections/
