@@ -12,3 +12,6 @@ collections:
   - name: https://github.com/ansible-collections/google.cloud.git
     type: git
     version: master
+  - name: https://github.com/ansible-collections/azure.git
+    type: git
+    version: dev

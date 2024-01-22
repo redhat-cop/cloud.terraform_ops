@@ -1,0 +1,20 @@
+terraform {
+  required_providers {
+    random = {
+      source = "hashicorp/random"
+      version = "3.6.0"
+    }
+  }
+  backend "azurerm" {
+    resource_group_name  = "{{ resource_group }}"
+    storage_account_name = "{{ azurerm_backend_storage_account_name }}"
+    container_name       = "{{ azurerm_backend_container_name }}"
+    key                  = "{{ azurerm_backend_tfstate_file }}"
+  }
+}
+
+resource "random_password" "password" {
+  length           = 16
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}<>:?"
+}

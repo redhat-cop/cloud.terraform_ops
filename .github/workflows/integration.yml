@@ -101,7 +101,11 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_wrapper: false
+<<<<<<< HEAD
+          terraform_version: ">1.7.0"
+=======
           terraform_version: "1.6.3"
+>>>>>>> 60bacee (set terraform version)
 
       - name: Pre install collections dependencies first so the collection install does not
         run: ansible-galaxy collection install --pre '-r${{ env.source }}/tests/integration/requirements.yml' -p /home/runner/collections/
@@ -115,6 +119,12 @@ jobs:
 
       - name: Create AWS/sts session credentials
         uses: ansible-network/github_actions/.github/actions/ansible_aws_test_provider@main
+        with:
+          collection_path: ${{ steps.install.outputs.collection_path }}
+          ansible_core_ci_key: ${{ secrets.ANSIBLE_CORE_CI_KEY }}
+
+      - name: Create AzureRM session credentials
+        uses: ansible-network/github_actions/.github/actions/ansible_azure_test_provider@main
         with:
           collection_path: ${{ steps.install.outputs.collection_path }}
           ansible_core_ci_key: ${{ secrets.ANSIBLE_CORE_CI_KEY }}

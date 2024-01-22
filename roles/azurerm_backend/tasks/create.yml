@@ -1,0 +1,87 @@
+---
+- name: Ensure the container name has been defined
+  ansible.builtin.fail:
+    msg: "The container name must be defined using 'azurerm_backend_container_name'"
+  when: azurerm_backend_container_name is undefined
+
+- name: Check if resource group exists
+  azure.azcollection.azure_rm_resourcegroup_info:
+    name: "{{ azurerm_backend_resource_group_name }}"
+  register: rg_info
+
+- name: Set variable for resource group id
+  ansible.builtin.set_fact:
+    azurerm_backend_resource_group_id: "{{ rg_info.resourcegroups.0.id }}"
+  when: rg_info.resourcegroups | length > 0
+
+- name: Create resource group
+  when: rg_info.resourcegroups | length == 0
+  block:
+    - name: Ensure the resource group location is defined
+      ansible.builtin.fail:
+        msg: "The resource group location should be defined using 'azurerm_backend_location'"
+      when: azurerm_backend_location is undefined
+
+    - name: Create resource group
+      azure.azcollection.azure_rm_resourcegroup:
+        name: "{{ azurerm_backend_resource_group_name }}"
+        location: "{{ azurerm_backend_location }}"
+      register: create_resource_group
+
+    - name: Set variable for resource group id
+      ansible.builtin.set_fact:
+        azurerm_backend_resource_group_id: "{{ create_resource_group.state.id }}"
+
+- name: List existing storage accounts
+  azure.azcollection.azure_rm_storageaccount_info:
+    resource_group: "{{ azurerm_backend_resource_group_name }}"
+    name: "{{ azurerm_backend_storage_account_name | default(omit) }}"
+  register: storage_accounts
+
+- name: Set Storage account name variable if storage account present
+  ansible.builtin.set_fact:
+    azurerm_backend_storage_account_name: "{{ storage_accounts.storageaccounts.0.name }}"
+  when:
+    - azurerm_backend_storage_account_name is undefined
+    - storage_accounts.storageaccounts | length > 0
+
+- name: Generate name for the storage account name
+  when:
+    - azurerm_backend_storage_account_name is undefined
+    - storage_accounts.storageaccounts | length == 0
+  block:
+    - name: Create Storage account
+      azure.azcollection.azure_rm_storageaccount:
+        resource_group: "{{ azurerm_backend_resource_group_name }}"
+        name: "{{ lookup('ansible.builtin.password', '/dev/null', chars=['ascii_lowercase', 'digits'], length=12) }}"
+        type: "{{ azurerm_backend_storage_account_type }}"
+      register: create_storage
+      retries: 300
+      delay: 1
+      until: create_storage is successful
+
+    - name: Set Storage account name variable
+      ansible.builtin.set_fact:
+        azurerm_backend_storage_account_name: "{{ create_storage.state.name }}"
+
+- name: Create Storage account
+  azure.azcollection.azure_rm_storageaccount:
+    resource_group: "{{ azurerm_backend_resource_group_name }}"
+    name: "{{ azurerm_backend_storage_account_name }}"
+    type: "{{ azurerm_backend_storage_account_type }}"
+  when:
+    - azurerm_backend_storage_account_name is defined
+    - storage_accounts.storageaccounts | length == 0
+
+- name: Create Container
+  azure.azcollection.azure_rm_storageblob:
+    resource_group: "{{ azurerm_backend_resource_group_name }}"
+    storage_account_name: "{{ azurerm_backend_storage_account_name }}"
+    container: "{{ azurerm_backend_container_name }}"
+
+- name: Assign the Storage Blob Data Contributor (ba92f5b4-2d11-453d-a403-e96b0029c9fe) role for the specified container to the Service principal
+  azure.azcollection.azure_rm_roleassignment:
+    assignee_object_id: "{{ azurerm_backend_service_principal_id }}"
+    scope: "{{ azurerm_backend_resource_group_id }}/providers/Microsoft.Storage/storageAccounts/{{ azurerm_backend_storage_account_name }}/blobServices/default/containers/{{ azurerm_backend_container_name }}"
+    role_definition_id: "{{ azurerm_backend_resource_group_id }}/providers/Microsoft.Authorization/roleDefinitions/ba92f5b4-2d11-453d-a403-e96b0029c9fe"
+  when: azurerm_backend_service_principal_id is defined

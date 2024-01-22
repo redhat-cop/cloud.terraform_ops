@@ -1,0 +1,3 @@
+---
+- name: "Create/Delete Azure infrastructure for Terraform backend."
+  ansible.builtin.include_tasks: "{{ azurerm_backend_operation }}.yml"

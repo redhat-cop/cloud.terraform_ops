@@ -1,0 +1,3 @@
+cloud/azure
+role/azurerm_backend
+time=1m
