@@ -7,7 +7,7 @@ This role can be used to create or delete following
 
 ## Role Variables
 
-- gcs_backend_operation - Choices include 'create' and 'delete'. `required`
+- gcs_backend_operation - Choices include 'create' and 'delete'. Note that `delete` operation might fail if bucket is non-empty. `required`
 
 - gcs_backend_gcp_project - The ID of the Google Cloud Platform project to use. `required`
 
