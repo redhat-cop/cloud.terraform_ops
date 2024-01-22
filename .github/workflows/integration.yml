@@ -116,6 +116,12 @@ jobs:
           collection_path: ${{ steps.install.outputs.collection_path }}
           ansible_core_ci_key: ${{ secrets.ANSIBLE_CORE_CI_KEY }}
 
+      - name: Create AzureRM session credentials
+        uses: abikouo/github_actions/.github/actions/ansible_azure_test_provider@ansible_test_providers_20240119
+        with:
+          collection_path: ${{ steps.install.outputs.collection_path }}
+          ansible_core_ci_key: ${{ secrets.ANSIBLE_CORE_CI_KEY }}
+
       # we use raw git to create a repository in the tests
       # this fails if the committer doesn't have a name and an email set
       - name: Set up git
