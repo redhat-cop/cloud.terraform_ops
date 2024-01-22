@@ -88,13 +88,17 @@ jobs:
         with:
           python-version: ${{ env.python_version }}
 
-      # install ansible
+      # Install ansible
       - name: Install ansible-core (${{ env.ansible_version }})
         run: >-
           python3 -m pip install
           https://github.com/ansible/ansible/archive/${{ env.ansible_version }}.tar.gz
           --disable-pip-version-check
         shell: bash
+
+      # Install Terraform binary
+      - name: Instal Terraform binary
+        uses: hashicorp/setup-terraform@v3
 
       - name: Pre install collections dependencies first so the collection install does not
         run: ansible-galaxy collection install --pre '-r${{ env.source }}/tests/integration/requirements.yml' -p /home/runner/collections/

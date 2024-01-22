@@ -1,0 +1,3 @@
+cloud/aws
+role/aws_s3backend
+time=1m

@@ -1,0 +1,21 @@
+---
+- module_defaults:
+    group/aws:
+      region: "{{ aws_region | default(omit) }}"
+      access_key: "{{ aws_access_key }}"
+      secret_key: "{{ aws_secret_key }}"
+      session_token: "{{ security_token | default(omit) }}"
+  name: Test Role 'aws_s3backend'
+  block:
+    - name: Test creation
+      ansible.builtin.include_tasks: create.yml
+
+    - name: Test deletion
+      ansible.builtin.include_tasks: delete.yml
+
+  always:
+    - name: Delete S3 Backend infrastructure
+      ansible.builtin.include_role:
+        name: cloud.terraform_ops.aws_s3backend
+      vars:
+        aws_s3backend_operation: delete

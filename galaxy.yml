@@ -19,9 +19,9 @@ tags:
   - infrastructure
   - cluster
 dependencies:
-  amazon.aws: '>=5.1.0'
-  community.aws: '>=5.0.0'
-version: 0.1.0-dev0
+  amazon.aws: '>=7.0.0'
+  community.aws: '>=7.1.0'
+version: 0.1.0
 build_ignore:
   - .DS_Store
   - '*.tar.gz'

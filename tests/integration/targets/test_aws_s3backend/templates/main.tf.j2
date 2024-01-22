@@ -1,0 +1,21 @@
+terraform {
+  required_providers {
+    random = {
+      source = "hashicorp/random"
+      version = "3.6.0"
+    }
+  }
+  backend "s3" {
+    bucket = "{{ aws_s3backend_bucket_name }}"
+    key    = "{{ tfstate_file_path }}"
+    {% if aws_s3backend_dynamodb_table_name is defined %}
+    dynamodb_table = "{{ aws_s3backend_dynamodb_table_name }}"
+    {% endif %}
+  }
+}
+
+resource "random_password" "password" {
+  length           = 16
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}<>:?"
+}

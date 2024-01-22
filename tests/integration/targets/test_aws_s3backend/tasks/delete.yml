@@ -1,0 +1,30 @@
+---
+# Test: Delete S3 bucket and DynamoDB table
+- name: Delete S3 bucket for Terraform state storage
+  ansible.builtin.include_role:
+    name: cloud.terraform_ops.aws_s3backend
+  vars:
+    aws_s3backend_operation: delete
+
+- name: Ensure S3 bucket has been deleted
+  amazon.aws.s3_bucket_info:
+    name: "{{ aws_s3backend_bucket_name }}"
+    bucket_facts:
+      bucket_versioning: true
+  register: testbucket
+
+- name: Validate that s3 bucket was delete
+  ansible.builtin.assert:
+    that:
+      - testbucket.buckets | length == 0
+
+# Validate that the DynamoDB table has been deleted
+- name: Read dynamodb table info
+  community.aws.dynamodb_table_info:
+    name: "{{ aws_s3backend_dynamodb_table_name }}"
+  register: table_info
+
+- name: Assert that the dynamodb table was deleted
+  ansible.builtin.assert:
+    that:
+      - not table_info.table
