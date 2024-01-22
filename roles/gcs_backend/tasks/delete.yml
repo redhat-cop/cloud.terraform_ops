@@ -1,5 +1,5 @@
 ---
-- name: Create a storage bucket with versioning enabled
+- name: Delete a storage bucket
   google.cloud.gcp_storage_bucket:
     name: "{{ gcs_backend_bucket_name }}"
     versioning:

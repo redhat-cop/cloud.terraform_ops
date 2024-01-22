@@ -10,4 +10,4 @@
         - gcs_backend_service_account_file is undefined
 
     - name: Include task file to perform specified action
-      ansible.builtin.include_tasks: "{{ operation }}.yml"
+      ansible.builtin.include_tasks: "{{ gcs_backend_operation }}.yml"

@@ -7,16 +7,17 @@ This role can be used to create or delete following
 
 ## Role Variables
 
-- operation - Choices include 'create' and 'delete'. `required`
+- gcs_backend_operation - Choices include 'create' and 'delete'. `required`
 
 - gcs_backend_gcp_project - The ID of the Google Cloud Platform project to use. `required`
 
 - gcs_backend_gcs_backend_bucket_name - The name of the bucket to be created. `required`
 
-- gcs_backend_auth_kind - The type of credential used. Currently supports "serviceaccount". `required`
+- gcs_backend_auth_kind - The type of credential used. `required`
 
-- gcs_backend_service_account_file - The path of a Service Account JSON file if serviceaccount is selected as type. `required`
+- gcs_backend_service_account_file - The path of a Service Account JSON file if serviceaccount is selected as type. `required` when `gcs_backend_auth_kind = serviceaccount`
 
+- gcs_backend_service_account_email - The service account email used for authentication. `required` when `gcs_backend_auth_kind = machineaccount`.
 
 Return Value
 ------------
@@ -27,7 +28,7 @@ Return Value
   ansible.builtin.include_role:
     name: cloud.terraform_ops.gcs_backend
   vars:
-    operation: create
+    gcs_backend_operation: create
     gcs_backend_gcs_backend_bucket_name: test-tf-backend-bucket
     gcs_backend_gcp_project: project-uscentral-demo
     gcs_backend_auth_kind: serviceaccount
@@ -37,7 +38,7 @@ Return Value
   ansible.builtin.include_role:
     name: cloud.terraform_ops.gcs_backend
   vars:
-    operation: delete
+    gcs_backend_operation: delete
     gcs_backend_gcs_backend_bucket_name: test-tf-backend-bucket
     gcs_backend_gcp_project: project-uscentral-demo
     gcs_backend_auth_kind: serviceaccount
