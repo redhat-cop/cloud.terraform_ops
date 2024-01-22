@@ -99,6 +99,8 @@ jobs:
       # Install Terraform binary
       - name: Instal Terraform binary
         uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ">1.7.0"
 
       - name: Pre install collections dependencies first so the collection install does not
         run: ansible-galaxy collection install --pre '-r${{ env.source }}/tests/integration/requirements.yml' -p /home/runner/collections/
