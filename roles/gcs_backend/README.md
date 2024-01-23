@@ -44,7 +44,7 @@ gcs_backend_service_account_email|The service account email used for authenticat
 
 GNU General Public License v3.0 or later
 
-See [LICENCE](https://github.com/ansible-collections/cloud.terraform_ops/blob/main/LICENSE) to see the full text.
+See [LICENCE](https://github.com/redhat-cop/cloud.terraform_ops/blob/main/LICENSE) to see the full text.
 
 ## Author Information
 

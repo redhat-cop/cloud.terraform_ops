@@ -17,14 +17,14 @@ Click on the name of a role or playbook to view that content's documentation:
 ### Roles
 Name | Description
 --- | ---
-[cloud.terraform_ops.aws_s3backend](https://github.com/ansible-collections/cloud.terraform_ops/blob/main/roles/aws_s3backend/README.md)|A role to create the necessary AWS infrastructure for an S3 remote backend for Terraform.
-[cloud.terraform_ops.gcs_backend](https://github.com/ansible-collections/cloud.terraform_ops/blob/main/roles/gcs_backend/README.md)|A role to create the necessary Google Cloud infrastructure for an GCS remote backend for Terraform.
+[cloud.terraform_ops.aws_s3backend](https://github.com/redhat-cop/cloud.terraform_ops/blob/main/roles/aws_s3backend/README.md)|A role to create the necessary AWS infrastructure for an S3 remote backend for Terraform.
+[cloud.terraform_ops.gcs_backend](https://github.com/redhat-cop/cloud.terraform_ops/blob/main/roles/gcs_backend/README.md)|A role to create the necessary Google Cloud infrastructure for an GCS remote backend for Terraform.
 
 ## Installation and Usage
 
 ### Requirements
 
-The [amazon.aws](https://github.com/ansible-collections/amazon.aws) and [community.aws](https://github.com/ansible-collections/amazon.aws) collections MUST be installed to use the role [cloud.terraform_ops.aws_s3backend](https://github.com/ansible-collections/cloud.terraform_ops/blob/main/roles/aws_s3backend/README.md).
+The [amazon.aws](https://github.com/ansible-collections/amazon.aws) and [community.aws](https://github.com/ansible-collections/amazon.aws) collections MUST be installed to use the role [cloud.terraform_ops.aws_s3backend](https://github.com/redhat-cop/cloud.terraform_ops/blob/main/roles/aws_s3backend/README.md).
 
 
 ### Installation
@@ -99,4 +99,4 @@ If you want to run AWS cloud integration tests, ensure you log in :
 
 GNU General Public License v3.0 or later
 
-See [LICENSE](https://github.com/ansible-collections/cloud.terraform_ops/blob/main/LICENSE) to see the full text.
+See [LICENSE](https://github.com/redhat-cop/cloud.terraform_ops/blob/main/LICENSE) to see the full text.
