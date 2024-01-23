@@ -10,6 +10,7 @@ argument_specs:
       gcs_backend_operation:
         description:
           - Whether to create or delete the backend resources.
+          - Note that `delete` operation might fail if bucket is non-empty.
         choices:
           - create
           - delete
