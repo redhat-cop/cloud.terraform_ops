@@ -11,4 +11,4 @@ collections:
     version: main
   - name: https://github.com/ansible-collections/google.cloud.git
     type: git
-    version: main
+    version: master
