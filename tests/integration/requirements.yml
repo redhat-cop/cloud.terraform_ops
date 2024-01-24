@@ -9,3 +9,6 @@ collections:
   - name: https://github.com/ansible-collections/cloud.terraform.git
     type: git
     version: main
+  - name: https://github.com/ansible-collections/google.cloud.git
+    type: git
+    version: main

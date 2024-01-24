@@ -1,0 +1,19 @@
+terraform {
+  required_providers {
+    random = {
+      source = "hashicorp/random"
+      version = "3.6.0"
+    }
+  }
+  backend "gcs" {
+    bucket  = "{{ test_gcs_backend_bucket_name }}"
+    prefix = "{{ test_gcs_backend_object_prefix }}"
+    credentials = "{{ GCP_SERVICE_ACCOUNT_CREDENTIALS_FILE }}"
+  }
+}
+
+resource "random_password" "password" {
+  length           = 16
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}<>:?"
+}

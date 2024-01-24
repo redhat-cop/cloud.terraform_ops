@@ -1,0 +1,121 @@
+---
+- name: Test Role 'gcs_backend'
+  block:
+    # Create GCS backend
+    - name: Create GCS backend for Terraform
+      ansible.builtin.include_role:
+        name: cloud.terraform_ops.gcs_backend
+      vars:
+        gcs_backend_operation: create
+        gcs_backend_bucket_name: "{{ test_gcs_backend_bucket_name }}"
+        gcs_backend_gcp_project: "{{ GCP_PROJECT_ID }}"
+        gcs_backend_auth_kind: serviceaccount
+        gcs_backend_service_account_file: "{{ GCP_SERVICE_ACCOUNT_CREDENTIALS_FILE }}"
+
+    - name: Get storage bucket information
+      ansible.builtin.command: gcloud storage buckets describe gs://"{{ test_gcs_backend_bucket_name }}" --format="json(name)"
+      register: bucket_info
+      ignore_errors: true
+
+    - name: Assert that storage bucket is created successfully
+      ansible.builtin.assert:
+        that:
+          - bucket_info is changed
+          - bucket_info is not failed
+
+    # Apply Terraform configuration using GCS backend
+    - name: Create temporary directory to run Terraform configuration
+      ansible.builtin.tempfile:
+        state: directory
+        suffix: .terraform
+      register: tmpdir
+
+    - name: Generate Terraform configuration
+      ansible.builtin.template:
+        src: 'main.tf.j2'
+        dest: "{{ tmpdir.path }}/main.tf"
+
+    - name: Apply Terraform configuration
+      cloud.terraform.terraform:
+        state: present
+        project_path: "{{ tmpdir.path }}"
+        force_init: true
+
+    - name: Get state file info
+      ansible.builtin.command: gcloud storage objects describe gs://{{ test_gcs_backend_bucket_name }}/{{ test_gcs_backend_object_prefix }}/default.tfstate --format=json
+      register: get_state_file_info
+      ignore_errors: true
+
+    - name: Convert stdout to object
+      set_fact:
+        state_file_info: "{{ get_state_file_info.stdout | from_json }}"
+
+    - name: Assert that state file was created in the bucket successfully
+      ansible.builtin.assert:
+        that:
+          - get_state_file_info is changed
+          - get_state_file_info is not failed
+          - state_file_info.storage_url is defined
+          - '"default.tfstate" in state_file_info.storage_url'
+
+    # Download terraform state file from storage bucket
+    - name: Download the state file from storage account container
+      google.cloud.gcp_storage_object:
+        action: download
+        bucket: "{{ test_gcs_backend_bucket_name }}"
+        src: "{{ test_gcs_backend_object_prefix }}/default.tfstate"
+        dest: "{{ tmpdir.path }}/content.tfstate"
+        project: "{{ GCP_PROJECT_ID }}"
+        auth_kind: "serviceaccount"
+        service_account_file: "{{ GCP_SERVICE_ACCOUNT_CREDENTIALS_FILE }}"
+      register: download_state_file
+
+    - name: Check if downloaded file exists at destination
+      stat:
+        path: "{{ tmpdir.path }}/content.tfstate"
+      register: file_status
+
+    - name: Ensure downloaded state file is not empty
+      ansible.builtin.assert:
+        that:
+          - download_state_file is changed
+          - download_state_file is not failed
+          - file_status.stat.exists is true
+          - file_status.stat.size > 0
+          - file_status.stat.mimetype == "application/json"
+
+    # Delete objects in bucket (empty bucket required for bucket deletion)
+    - name: Delete the state file from storage account container
+      google.cloud.gcp_storage_object:
+        action: delete
+        bucket: "{{ test_gcs_backend_bucket_name }}"
+        src: "{{ test_gcs_backend_object_prefix }}/default.tfstate"
+        dest: "{{ tmpdir.path }}/content.tfstate"
+        project: "{{ GCP_PROJECT_ID }}"
+        auth_kind: "serviceaccount"
+        service_account_file: "{{ GCP_SERVICE_ACCOUNT_CREDENTIALS_FILE }}"
+      register: delete_file_result
+
+  # Delete the Backend resources
+    - name: Delete GCS backend resources
+      ansible.builtin.include_role:
+        name: cloud.terraform_ops.gcs_backend
+      vars:
+        gcs_backend_operation: delete
+        gcs_backend_bucket_name: "{{ test_gcs_backend_bucket_name }}"
+        gcs_backend_gcp_project: "{{ GCP_PROJECT_ID }}"
+        gcs_backend_auth_kind: serviceaccount
+        gcs_backend_service_account_file: "{{ GCP_SERVICE_ACCOUNT_CREDENTIALS_FILE }}"
+      ignore_errors: true
+      register: delete_bucket_result
+
+  always:
+    - name: Force delete non-empty bucket if not deleted already
+      ansible.builtin.command: gsutil -m rm -r gs://{{ test_gcs_backend_bucket_name }}
+      ignore_errors: true
+
+    - name: Delete temporary directory
+      ansible.builtin.file:
+        state: absent
+        path: "{{ tmpdir.path }}"
+      when: tmpdir is defined

@@ -8,3 +8,4 @@
     auth_kind: "{{ gcs_backend_auth_kind }}"
     service_account_file: "{{ gcs_backend_service_account_file }}"
     state: absent
+  ignore_errors: true # currently module `gcp_storage_bucket` does not support deleting non-empty buckets
