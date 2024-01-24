@@ -102,9 +102,9 @@
           - delete_file_result is changed
           - delete_file_result is not failed
 
-  # Delete the Backend resources
-  # currently, fails as google.cloud.gcp_storage_bucket module does not support force delete non-empty bucket
-  # object deletion from task above does not help as buckets with versioning enabled retain the deleted objects
+    # Delete the Backend resources
+    # currently, fails as google.cloud.gcp_storage_bucket module does not support force delete non-empty bucket
+    # object deletion from task above does not help as buckets with versioning enabled retain the deleted objects
     - name: Delete GCS backend resources
       ansible.builtin.include_role:
         name: cloud.terraform_ops.gcs_backend
