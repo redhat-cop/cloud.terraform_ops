@@ -47,7 +47,7 @@
       ignore_errors: true
 
     - name: Convert stdout to object
-      set_fact:
+      ansible.builtin.set_fact:
         state_file_info: "{{ get_state_file_info.stdout | from_json }}"
 
     - name: Assert that state file was created in the bucket successfully
