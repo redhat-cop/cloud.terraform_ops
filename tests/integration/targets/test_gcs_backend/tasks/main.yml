@@ -106,12 +106,13 @@
         gcs_backend_gcp_project: "{{ GCP_PROJECT_ID }}"
         gcs_backend_auth_kind: serviceaccount
         gcs_backend_service_account_file: "{{ GCP_SERVICE_ACCOUNT_CREDENTIALS_FILE }}"
-      ignore_errors: true
       register: delete_bucket_result
+      ignore_errors: true
 
   always:
     - name: Force delete non-empty bucket if not deleted already
       ansible.builtin.command: gsutil -m rm -r gs://{{ test_gcs_backend_bucket_name }}
+      register: force_delete_bucket_result
       ignore_errors: true
 
     - name: Delete temporary directory
