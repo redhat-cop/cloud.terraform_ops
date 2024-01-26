@@ -1,3 +1,0 @@
----
-minor_changes:
-  - roles/gcs_backend - Add a new role to create infrastructure for setting up GCS backend for Terraform (https://github.com/redhat-cop/cloud.terraform_ops/pull/3).
