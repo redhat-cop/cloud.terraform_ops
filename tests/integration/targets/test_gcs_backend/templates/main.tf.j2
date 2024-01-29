@@ -8,7 +8,7 @@ terraform {
   backend "gcs" {
     bucket  = "{{ test_gcs_backend_bucket_name }}"
     prefix = "{{ test_gcs_backend_object_prefix }}"
-    credentials = "{{ GCP_SERVICE_ACCOUNT_CREDENTIALS_FILE }}"
+    credentials = "{{ gcp_cred_file }}"
   }
 }
 

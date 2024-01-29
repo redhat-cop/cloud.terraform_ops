@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 import os
 from google.cloud import storage
+from google.oauth2.service_account import Credentials
 
 
-def delete_bucket(bucket_name, project_name, credentials_file_path):
+def delete_bucket(bucket_name, project_name, credentials):
     """Deletes a bucket. The bucket must be empty."""
-    storage_client = storage.Client(project=project_name, credentials=credentials_file_path)
+    storage_client = storage.Client(project=project_name, credentials=credentials)
 
     bucket = storage_client.get_bucket(bucket_name)
     bucket.delete(force=True)
@@ -15,6 +16,8 @@ def delete_bucket(bucket_name, project_name, credentials_file_path):
 if __name__ == "__main__":
     bucket_name = os.getenv("BUCKET_NAME")
     project_name = os.getenv("CLOUDSDK_CORE_PROJECT")
-    credentials_file_path = os.getenv("GCP_SERVICE_ACCOUNT_CREDENTIALS_FILE")
+    credentials_file_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
 
-    delete_bucket(bucket_name, project_name, credentials_file_path)
+    credentials = Credentials.from_service_account_file(credentials_file_path)
+
+    delete_bucket(bucket_name, project_name, credentials)
