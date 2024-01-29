@@ -22,7 +22,6 @@
         service_account_file: "{{ GCP_SERVICE_ACCOUNT_CREDENTIALS_FILE }}"
         state: present
       register: bucket_info
-      ignore_errors: true
 
     - name: Assert that storage bucket already exists
       ansible.builtin.assert:
