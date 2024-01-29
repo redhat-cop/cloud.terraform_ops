@@ -85,7 +85,6 @@
         gcs_backend_auth_kind: serviceaccount
         gcs_backend_service_account_file: "{{ GCP_SERVICE_ACCOUNT_CREDENTIALS_FILE }}"
       register: delete_bucket_result
-      ignore_errors: true
 
   always:
     # currently, google.cloud does not support deleting non-empty buckets
