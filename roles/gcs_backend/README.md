@@ -1,8 +1,8 @@
 # gcs_backend
 
-A role to ensure that the necessary GCP infrastructure is present for the Google Cloud Storage(GCS) remote backend for Terraform.
+A role to ensure that the necessary GCP infrastructure is present for the Google Cloud Storage (GCS) remote backend for Terraform.
 
-This role can be used to create or delete following
+This role can be used to create or delete the following
 - A Google Cloud Storage bucket with object versioning enabled
 
 ## Role Variables

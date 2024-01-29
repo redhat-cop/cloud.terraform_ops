@@ -1,6 +1,6 @@
 ---
-test_gcs_backend_bucket_name: gcs-backend-integration-test-bucket
+test_gcs_backend_bucket_name: "gcs-backend-integration-test-bucket-{{ resource_prefix }}"
 gcs_backend_tfstate_file: "gcs.testing.terraform.tfstate"
 test_gcs_backend_object_prefix: "terraform/state"
-GCP_PROJECT_ID: "project-123-dev"
-GCP_SERVICE_ACCOUNT_CREDENTIALS_FILE: "credentials.json"
+GCP_PROJECT_ID: ""
+GCP_SERVICE_ACCOUNT_CREDENTIALS_FILE: ""
