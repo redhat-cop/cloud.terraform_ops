@@ -5,7 +5,7 @@ from google.cloud import storage
 
 def delete_bucket(bucket_name, project_name, credentials_file_path):
     """Deletes a bucket. The bucket must be empty."""
-    storage_client = storage.Client(project=project_name)
+    storage_client = storage.Client(project=project_name, credentials=credentials_file_path)
 
     bucket = storage_client.get_bucket(bucket_name)
     bucket.delete(force=True)
