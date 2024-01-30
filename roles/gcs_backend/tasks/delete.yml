@@ -16,4 +16,3 @@
       - "Please refer to the following error message for more details."
       - "{{ delete_bucket_result.msg }}"
   when: delete_bucket_result is failed
-  ignore_errors: true
