@@ -91,6 +91,13 @@
         gcs_backend_service_account_file: "{{ gcp_cred_file }}"
       register: delete_bucket_result
 
+  # rescue failed include_role above to avoid test failure (failed=0, rescued=1)
+  rescue:
+    - name: Print above task failed as expected
+      debug:
+        msg:
+          - 'Above task failure is expected as non-empty buckets deletion is not supported by google.cloud.gcp_storage_bucket'
+
   always:
     # currently, google.cloud does not support deleting non-empty buckets
     # possible options are SDK or gsutil
