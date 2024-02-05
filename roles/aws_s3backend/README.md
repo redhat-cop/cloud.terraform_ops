@@ -37,7 +37,7 @@ aws_s3backend_delete_iam_resource|On deletion, specifies whether the IAM resourc
 
 GNU General Public License v3.0 or later
 
-See [LICENCE](https://github.com/ansible-collections/cloud.terraform_ops/blob/main/LICENSE) to see the full text.
+See [LICENCE](https://github.com/redhat-cop/cloud.terraform_ops/blob/main/LICENSE) to see the full text.
 
 ## Author Information
 
