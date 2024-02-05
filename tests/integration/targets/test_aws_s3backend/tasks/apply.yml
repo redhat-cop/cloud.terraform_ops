@@ -22,6 +22,7 @@
         state: present
         project_path: "{{ tfpath.path }}"
         force_init: true
+        binary_path: terraform-bin
 
     - name: Ensure Terraform state file has been stored into bucket
       amazon.aws.s3_object_info:
