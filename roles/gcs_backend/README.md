@@ -16,6 +16,10 @@ gcs_backend_auth_kind|The type of credential used. Choices: 'application', 'serv
 gcs_backend_service_account_file|The path of a Service Account JSON file if serviceaccount is selected as authentication type.|string|N/A| when `gcs_backend_auth_kind = serviceaccount`
 gcs_backend_service_account_email|An optional service account email address if machineaccount is selected and the user does not wish to use the default email.|string|N/A| No
 
+### Using with AAP Controller
+
+Note: When using this role in AAP Controller, authentication to Google Cloud Platform (GCP) can be performed by adding GCE type credentials in AAP Controller and providing it to the job template that makes use of this role.
+In such case, `gcs_backend_service_account_file` and `gcs_backend_service_account_email` role variables can be omitted.
 
 ## Examples
 ```
