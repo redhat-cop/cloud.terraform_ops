@@ -2,9 +2,10 @@
 - name: Delete a storage bucket
   google.cloud.gcp_storage_bucket:
     name: "{{ gcs_backend_bucket_name }}"
-    project: "{{ gcs_backend_gcp_project }}"
-    auth_kind: "{{ gcs_backend_auth_kind }}"
-    service_account_file: "{{ gcs_backend_service_account_file }}"
+    project: "{{ gcs_backend_gcp_project | default(omit) }}"
+    auth_kind: "{{ gcs_backend_auth_kind | default(omit) }}"
+    service_account_file: "{{ gcs_backend_service_account_file | default(omit) }}"
+    service_account_email: "{{ gcs_backend_service_account_email | default(omit) }}"
     state: absent
   ignore_errors: true  # currently module `gcp_storage_bucket` does not support deleting non-empty buckets
   register: delete_bucket_result
