@@ -8,5 +8,5 @@ GitHub Actions are used to run the Continuous Integration for redhat-cop/cloud.t
 | ------ |-------| ------ | -----------|
 | Changelog |Checks for the presence of Changelog fragments | 3.9 | devel |
 | Linters | Runs `ansible-lint`, `black` and `flake8`| 3.9 and 3.11 for ansible-lint | devel |
-| Sanity | Runs Ansible sanity checks | 3.9, 3.10, 3.11, 3.12 | 2.14 (not on 3.12), 2.15 (not on 3.12), 2.16 (not on 3.9), Stable (not on 3.9), devel (not on 3.9) |
+| Sanity | Runs Ansible sanity checks | 3.9, 3.10, 3.11, 3.12 | 2.14 (not on 3.12), 2.15 (not on 3.12), 2.16 (not on 3.9), stable (not on 3.9), devel (not on 3.9) |
 | Integration | Executes the integration test suites | 3.11 | milestone |
