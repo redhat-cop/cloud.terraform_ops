@@ -5,14 +5,14 @@ argument_specs:
     short_description: A role to create/delete the necessary Azure infrastructure for an Azurerm remote backend for Terraform.
     description:
       - A role to ensure that the necessary Azure infrastructure is present/absent for an Azurerm remote backend for Terraform.
-      - When I(azurerm_backend_operation=create), the role ensures that a resource group, a storage account and a container are present and optionally
+      - When O(azurerm_backend_operation=create), the role ensures that a resource group, a storage account and a container are present and optionally
         assigns the 'Storage Blob Data Contributor' role for the specified container to the service principal provided by the user.
-      - When I(azurerm_backend_operation=delete), the role will force deletion of the resource group.
+      - When O(azurerm_backend_operation=delete), the role will force deletion of the resource group.
     options:
       azurerm_backend_operation:
         description:
           - Whether to create or delete the infrastructure for the azurerm Terraform backend.
-          - When set to I(delete), the resource group will be deleted with all attached resources.
+          - When set to V(delete), the resource group will be deleted with all attached resources.
         choices:
           - create
           - delete
@@ -46,7 +46,7 @@ argument_specs:
       azurerm_backend_container_name:
         description:
           - The Name of the Storage Container to create within the Storage Account.
-          - Required when I(azurerm_backend_operation=create).
+          - Required when O(azurerm_backend_operation=create).
       azurerm_backend_service_principal_id:
         description:
           - The service principal Id used by Terraform to push Terraform state to the container.

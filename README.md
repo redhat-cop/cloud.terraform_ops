@@ -34,7 +34,7 @@ Name | Description
 
 - The [google.cloud](https://github.com/ansible-collections/google.cloud) collection MUST be installed to use the role [cloud.terraform_ops.gcs_backend](https://github.com/redhat-cop/cloud.terraform_ops/blob/main/roles/gcs_backend/README.md).
 
-- The [azure.azcollection](https://github.com/ansible-collections/azure) collection MUST be installed to use the role [cloud.terraform_ops.azurerm_backend](https://github.com/redhat-cop/cloud.terraform_ops/tree/main/roles/azurerm_backend).
+- The [azure.azcollection](https://github.com/ansible-collections/azure) collection MUST be installed to use the role [cloud.terraform_ops.azurerm_backend](https://github.com/redhat-cop/cloud.terraform_ops/tree/main/roles/azurerm_backend/README.md).
 
 
 ### Installation
