@@ -5,6 +5,7 @@
     state: present
     versioning: true
 
+# This is a test
 - name: Create dynamodb table
   community.aws.dynamodb_table:
     state: present
