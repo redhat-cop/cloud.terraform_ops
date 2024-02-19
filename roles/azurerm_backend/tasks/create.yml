@@ -83,5 +83,5 @@
   azure.azcollection.azure_rm_roleassignment:
     assignee_object_id: "{{ azurerm_backend_service_principal_id }}"
     scope: "{{ azurerm_backend_resource_group_id }}/providers/Microsoft.Storage/storageAccounts/{{ azurerm_backend_storage_account_name }}/blobServices/default/containers/{{ azurerm_backend_container_name }}"
-    role_definition_id: "{{ azurerm_backend_resource_group_id }}/providers/Microsoft.Authorization/roleDefinitions/ba92f5b4-2d11-453d-a403-e96b0029c9fe"
+    role_definition_id: "/subscriptions/{{ azurerm_backend_resource_group_id.split('/')[2] }}/providers/Microsoft.Authorization/roleDefinitions/ba92f5b4-2d11-453d-a403-e96b0029c9fe"
   when: azurerm_backend_service_principal_id is defined
