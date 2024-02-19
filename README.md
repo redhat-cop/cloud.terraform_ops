@@ -1,13 +1,18 @@
-# cloud.terraform_ops roles/playbooks to create/configure Cloud providers' resources for AAP Terraform integration
+# cloud.terraform_ops roles to create/configure Cloud providers' resources for Red Hat Ansible Automation Platform Terraform integration
 
 This repository hosts the `cloud.terraform_ops` Ansible Collection.
 
-The collection includes a variety of Ansible roles and playbooks, to help automate the management of cloud providers' resources for AAP Terraform integration.
+The collection includes a variety of Ansible roles, to help automate the management of Cloud providers' resources for Red Hat Ansible
+Automation Platform Terraform integration.
 
 <!--start requires_ansible-->
 ## Ansible version compatibility
 
 This collection has been tested against following Ansible versions: **>=2.14.0**.
+
+## Python version compatibility
+
+This collection requires Python 3.9 or greater.
 
 ## Included content
 
@@ -18,7 +23,7 @@ Click on the name of a role or playbook to view that content's documentation:
 Name | Description
 --- | ---
 [cloud.terraform_ops.aws_s3backend](https://github.com/redhat-cop/cloud.terraform_ops/blob/main/roles/aws_s3backend/README.md)|A role to create the necessary AWS infrastructure for an S3 remote backend for Terraform.
-[cloud.terraform_ops.gcs_backend](https://github.com/redhat-cop/cloud.terraform_ops/blob/main/roles/gcs_backend/README.md)|A role to create the necessary Google Cloud infrastructure for a GCS remote backend for Terraform.
+[cloud.terraform_ops.gcs_backend](https://github.com/redhat-cop/cloud.terraform_ops/blob/main/roles/gcs_backend/README.md)|A role to create the necessary Google Cloud infrastructure for a Google Cloud Storage (GCS) remote backend for Terraform.
 
 ## Installation and Usage
 
@@ -94,8 +99,11 @@ If you want to run AWS cloud integration tests, ensure you log in :
   aws configure set aws_secret_access_key my-secret-key
   aws configure set region                eu-north-1
 
-  ansible-test integration [target]
 ```
+
+Once credentials are set up, run all integration tests with `ansible-test integration` or run a subset of integration tests with `ansible-test integration <target>`.
+
+This collection is tested using GitHub Actions. To know more about CI, refer to [CI.md](https://github.com/https://github.com/redhat-cop/cloud.terraform_ops/blob/main/CI.md).
 
 ## License
 
