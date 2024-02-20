@@ -1,0 +1,6 @@
+---
+- name: Delete resource group
+  azure.azcollection.azure_rm_resourcegroup:
+    name: "{{ azurerm_backend_resource_group_name }}"
+    state: absent
+    force_delete_nonempty: true

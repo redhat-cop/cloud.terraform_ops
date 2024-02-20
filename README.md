@@ -24,6 +24,7 @@ Name | Description
 --- | ---
 [cloud.terraform_ops.aws_s3backend](https://github.com/redhat-cop/cloud.terraform_ops/blob/main/roles/aws_s3backend/README.md)|A role to create the necessary AWS infrastructure for an S3 remote backend for Terraform.
 [cloud.terraform_ops.gcs_backend](https://github.com/redhat-cop/cloud.terraform_ops/blob/main/roles/gcs_backend/README.md)|A role to create the necessary Google Cloud infrastructure for a Google Cloud Storage (GCS) remote backend for Terraform.
+[cloud.terraform_ops.azurerm_backend](https://github.com/redhat-cop/cloud.terraform_ops/tree/main/roles/azurerm_backend/README.md)|A role to create/delete the necessary Azure infrastructure for an Azurerm remote backend for Terraform.
 
 ## Installation and Usage
 
@@ -32,6 +33,8 @@ Name | Description
 - The [amazon.aws](https://github.com/ansible-collections/amazon.aws) and [community.aws](https://github.com/ansible-collections/amazon.aws) collections MUST be installed to use the role [cloud.terraform_ops.aws_s3backend](https://github.com/redhat-cop/cloud.terraform_ops/blob/main/roles/aws_s3backend/README.md).
 
 - The [google.cloud](https://github.com/ansible-collections/google.cloud) collection MUST be installed to use the role [cloud.terraform_ops.gcs_backend](https://github.com/redhat-cop/cloud.terraform_ops/blob/main/roles/gcs_backend/README.md).
+
+- The [azure.azcollection](https://github.com/ansible-collections/azure) collection MUST be installed to use the role [cloud.terraform_ops.azurerm_backend](https://github.com/redhat-cop/cloud.terraform_ops/tree/main/roles/azurerm_backend/README.md).
 
 
 ### Installation
