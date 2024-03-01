@@ -15,6 +15,7 @@
       amazon.aws.iam_policy_info:
         iam_type: role
         iam_name: "{{ aws_s3backend_iam_name }}"
+        region: "{{ aws_region }}"
       register: policies
 
     - name: Assert the S3 policy was assigned to the role
@@ -34,6 +35,7 @@
     - name: Ensure the IAM role was deleted
       amazon.aws.iam_role_info:
         name: "{{ aws_s3backend_iam_name }}"
+        region: "{{ aws_region }}"
       register: role_info
 
     - name: Assert that the Role was deleted
