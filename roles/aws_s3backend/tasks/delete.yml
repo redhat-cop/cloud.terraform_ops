@@ -4,12 +4,14 @@
     name: "{{ aws_s3backend_bucket_name }}"
     state: absent
     force: true
+    region: "{{ aws_s3backend_region }}"
 
 - name: Delete dynamodb table
   community.aws.dynamodb_table:
     state: absent
     name: "{{ aws_s3backend_dynamodb_table_name }}"
     wait: true
+    region: "{{ aws_s3backend_region }}"
   when: aws_s3backend_dynamodb_table_name is defined
 
 - name: Delete the policy attached to the user/role/group
@@ -18,6 +20,7 @@
     iam_name: "{{ aws_s3backend_iam_name }}"
     policy_name: "{{ aws_s3backend_policy_name }}"
     state: absent
+    region: "{{ aws_s3backend_region }}"
   when: aws_s3backend_iam_type is defined
 
 - name: Delete IAM user

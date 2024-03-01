@@ -4,6 +4,7 @@
     name: "{{ aws_s3backend_bucket_name }}"
     state: present
     versioning: true
+    region: "{{ aws_s3backend_region }}"
 
 - name: Create dynamodb table
   community.aws.dynamodb_table:
@@ -13,6 +14,7 @@
     hash_key_type: "STRING"
     wait: true
     table_class: 'STANDARD'
+    region: "{{ aws_s3backend_region }}"
   when: aws_s3backend_dynamodb_table_name is defined
 
 - name: Create/Assign policy to the IAM user/role/group

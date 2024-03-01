@@ -15,6 +15,10 @@ argument_specs:
           - create
           - delete
         default: create
+      aws_s3backend_region:
+        description:
+          - The AWS region.
+        default: 'us-east-1'
       aws_s3backend_bucket_name:
         description:
           - The name of the S3 bucket to create/delete.

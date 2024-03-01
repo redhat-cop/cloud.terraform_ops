@@ -9,6 +9,7 @@
     name: "{{ aws_s3backend_bucket_name }}"
     bucket_facts:
       bucket_versioning: true
+    region: "{{ aws_region }}"
   register: testbucket
 
 - name: Validate that versioning has been enabled into bucket
@@ -34,6 +35,7 @@
 - name: Read dynamodb table info
   community.aws.dynamodb_table_info:
     name: "{{ aws_s3backend_dynamodb_table_name }}"
+    region: "{{ aws_region }}"
   register: table_info
 
 - name: Assert that the table has been created with the required attributes
