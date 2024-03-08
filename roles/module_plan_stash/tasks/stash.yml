@@ -14,4 +14,4 @@
     path: "{{ module_plan_stash_plan_file_path }}"
     state: stash
     var_name: "{{ module_plan_stash_var_name | default(omit) }}" # default value terraform_plan is used by module itself, not required to specify here
-  no_log: true
+  # no_log: true
