@@ -1,0 +1,42 @@
+---
+argument_specs:
+  main:
+    version_added: 1.0.0
+    short_description: A role to create/delete the GCP infrastructure for a GCS remote backend for Terraform.
+    description:
+      - A role to ensure that the necessary GCP infrastructure is present/absent for a GCS remote backend for Terraform.
+      - When creating, the storage bucket will be created with object versioning enabled.
+    options:
+      gcs_backend_operation:
+        description:
+          - Whether to create or delete the backend resources.
+          - Note that `delete` operation might fail if bucket is non-empty.
+        choices:
+          - create
+          - delete
+        default: create
+        type: str
+      gcs_backend_gcp_project:
+        description:
+          - The ID of the Google Cloud Platform project to use.
+        required: true
+        type: str
+      gcs_backend_bucket_name:
+        description:
+          - The name of the bucket to be created.
+        required: true
+        type: str
+      gcs_backend_auth_kind:
+        description:
+          - The type of credential used.
+        required: true
+        type: str
+      gcs_backend_service_account_file:
+        description:
+          - The path of a Service Account JSON file if serviceaccount is selected as type.
+          - required when `gcs_backend_auth_kind = serviceaccount`.
+        type: str
+      gcs_backend_service_account_email:
+        description:
+          - The service account email used for authentication.
+        type: str

@@ -1,0 +1,31 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "s3:ListBucket",
+      "Resource": "arn:aws:s3:::{{ aws_s3backend_bucket_name }}"
+    },
+    {
+      "Effect": "Allow",
+      "Action": ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
+      {% if aws_s3backend_terraform_state_path is defined %}
+      "Resource": "arn:aws:s3:::{{ aws_s3backend_bucket_name }}/{{ aws_s3backend_terraform_state_path }}"
+      {% else %}
+      "Resource": "arn:aws:s3:::{{ aws_s3backend_bucket_name }}/*"
+      {% endif %}
+    },
+    {% if aws_s3backend_dynamodb_table_name is defined %}
+    {
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:PutItem",
+        "dynamodb:DeleteItem"
+      ],
+      "Resource": "arn:aws:dynamodb:*:*:table/{{ aws_s3backend_dynamodb_table_name }}"
+    }
+    {% endif %}
+  ]
+}

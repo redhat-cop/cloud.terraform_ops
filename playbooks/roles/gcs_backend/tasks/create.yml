@@ -1,0 +1,11 @@
+---
+- name: Create a storage bucket with object versioning enabled
+  google.cloud.gcp_storage_bucket:
+    name: "{{ gcs_backend_bucket_name }}"
+    versioning:
+      enabled: true
+    project: "{{ gcs_backend_gcp_project | default(omit) }}"
+    auth_kind: "{{ gcs_backend_auth_kind | default(omit) }}"
+    service_account_file: "{{ gcs_backend_service_account_file | default(omit) }}"
+    service_account_email: "{{ gcs_backend_service_account_email | default(omit) }}"
+    state: present

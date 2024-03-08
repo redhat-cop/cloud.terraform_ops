@@ -1,0 +1,27 @@
+---
+- name: Create S3 bucket with versioning enabled
+  amazon.aws.s3_bucket:
+    name: "{{ aws_s3backend_bucket_name }}"
+    state: present
+    versioning: true
+
+- name: Create dynamodb table
+  community.aws.dynamodb_table:
+    state: present
+    name: "{{ aws_s3backend_dynamodb_table_name }}"
+    hash_key_name: "LockID"
+    hash_key_type: "STRING"
+    wait: true
+    table_class: 'STANDARD'
+  when: aws_s3backend_dynamodb_table_name is defined
+
+- name: Create/Assign policy to the IAM user/role/group
+  when: aws_s3backend_iam_type is defined
+  block:
+    - name: Create/Assign policy to the IAM role
+      ansible.builtin.include_tasks: role.yml
+      when: aws_s3backend_iam_type == "role"
+
+    - name: Create/Assign policy to the IAM user/group
+      ansible.builtin.include_tasks: user_or_group.yml
+      when: aws_s3backend_iam_type in ("user", "group")
