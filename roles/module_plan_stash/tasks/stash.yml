@@ -8,6 +8,7 @@
   check_mode: true
   when: module_plan_stash_generate_plan_file == True
 
+- debug: msg="test"
 
 - name: Encode a terraform plan file into variable "{{ module_plan_stash_var_name | default('terraform_plan') }}"
   cloud.terraform.plan_stash:
