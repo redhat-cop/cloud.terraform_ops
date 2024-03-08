@@ -1,0 +1,30 @@
+---
+- name: Test the cloud.terraform_ops.module_plan_stash role
+  hosts: localhost
+  gather_facts: true
+  tasks:
+
+    - name: Create temporary directory to run terraform configuration
+      ansible.builtin.tempfile:
+        suffix: '.tf'
+        state: directory
+      register: tfdir
+
+    - name: Run terraform configuration
+      vars:
+        terraform_plan_file: "{{ tfdir.path }}/original_plan.tfplan"
+      block:
+        - name: Download terraform configuration
+          uri:
+            dest: "{{ tfdir.path }}/main.tf"
+            url: "{{ terraform_config_url }}"
+
+        - name: Stash the plan
+          ansible.builtin.include_role:
+            name: cloud.terraform_ops.module_plan_stash
+          vars:
+            module_plan_stash_operation: stash
+            module_plan_stash_generate_plan_file: false
+            module_plan_stash_plan_file_path: "{{ terraform_plan_file }}"
+            module_plan_stash_load_plan_file_path: "{{ tfdir.path }}/loaded_plan.tfplan"
+            module_plan_stash_tf_project_path: "{{ tfdir.path }}"
