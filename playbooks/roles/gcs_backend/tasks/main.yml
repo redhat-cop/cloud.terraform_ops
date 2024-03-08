@@ -1,5 +1,0 @@
----
-- name: Run 'gcs_backend' role
-  block:
-    - name: Include task file to perform specified action
-      ansible.builtin.include_tasks: "{{ gcs_backend_operation }}.yml"

@@ -1,3 +1,0 @@
----
-azurerm_backend_operation: create
-azurerm_backend_storage_account_type: Standard_LRS

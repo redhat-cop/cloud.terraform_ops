@@ -28,3 +28,9 @@
             module_plan_stash_plan_file_path: "{{ terraform_plan_file }}"
             module_plan_stash_load_plan_file_path: "{{ tfdir.path }}/loaded_plan.tfplan"
             module_plan_stash_tf_project_path: "{{ tfdir.path }}"
+
+      always:
+        - name: Delete temporary directory
+          ansible.builtin.file:
+            state: absent
+            path: "{{ tfdir.path }}"

@@ -1,4 +1,0 @@
----
-aws_s3backend_operation: "create"
-aws_s3backend_policy_name: "terraform-policy-for-{{ aws_s3backend_bucket_name }}"
-aws_s3backend_delete_iam_resource: false
