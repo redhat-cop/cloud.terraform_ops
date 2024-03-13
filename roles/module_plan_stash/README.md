@@ -16,6 +16,9 @@ module_plan_stash_tf_project_path|The path to terraform project directory contai
 module_plan_stash_var_name| -When O(state=stash), this parameter defines the variable name to be set into stats. -When O(state=load), this parameter defines the variable from ansible facts containing the base64-encoded data of the terraform plan file. -Variables must start with a letter or underscore character, and contain only letters, numbers and underscores.|string|terraform_plan|false
 module_plan_stash_generate_plan_file|Whether to generate plan file from Terraform config to use when doing stash plan|bool|false|false
 
+Note:
+- When I(module_plan_stash_generate_plan_file_val) is set to False, I(terraform_existing_plan_url) must be provided.
+
 ## Example Playbook
 
 Below example describes scenario of using the role in Ansible Controller workflow templates.
