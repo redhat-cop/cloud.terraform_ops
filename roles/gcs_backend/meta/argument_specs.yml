@@ -19,7 +19,6 @@ argument_specs:
       gcs_backend_gcp_project:
         description:
           - The ID of the Google Cloud Platform project to use.
-        required: false
         type: str
       gcs_backend_bucket_name:
         description:
@@ -29,7 +28,6 @@ argument_specs:
       gcs_backend_auth_kind:
         description:
           - The type of credential used.
-        required: false
         type: str
       gcs_backend_service_account_file:
         description:
