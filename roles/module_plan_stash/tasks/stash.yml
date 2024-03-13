@@ -1,5 +1,5 @@
 ---
-- name: Generate Terraform plan file from configuration
+- name: Generate Terraform plan file from configuration and store to "{{ module_plan_stash_plan_file_path }}"
   cloud.terraform.terraform:
     force_init: true
     plan_file: "{{ module_plan_stash_plan_file_path }}"
@@ -8,11 +8,9 @@
   check_mode: true
   when: module_plan_stash_generate_plan_file == True
 
-- debug: msg="test"
-
-- name: Encode a terraform plan file into variable "{{ module_plan_stash_var_name | default('terraform_plan') }}"
+- name: Encode terraform plan file into variable "{{ module_plan_stash_var_name | default('terraform_plan') }}"
   cloud.terraform.plan_stash:
     path: "{{ module_plan_stash_plan_file_path }}"
     state: stash
     var_name: "{{ module_plan_stash_var_name | default(omit) }}" # default value terraform_plan is used by module itself, not required to specify here
-  # no_log: true
+  no_log: true

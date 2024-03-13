@@ -1,0 +1,8 @@
+---
+- name: Load the terraform plan file from variable "{{ module_plan_stash_var_name | default('terraform_plan') }}" into file "{{ module_plan_stash_plan_file_path }}"
+  cloud.terraform.plan_stash:
+    path: "{{ module_plan_stash_plan_file_path }}"
+    state: load
+    var_name: "{{ module_plan_stash_var_name | default(omit) }}" # default value terraform_plan is used by module itself, not required to specify here
+    binary_data: "{{ binary_data | default(omit) }}"
+  no_log: true
