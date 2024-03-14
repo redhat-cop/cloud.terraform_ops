@@ -27,7 +27,7 @@ First create playbook below to stash the terraform plan and store it to ansible 
   gather_facts: true
   vars:
     module_plan_stash_var_name_val: my_test_stashed_plan
-    module_plan_stash_generate_plan_file_name_val: /path/to/plan/file/to/read/stash/myplan.tfplan
+    module_plan_stash_plan_file_name_val: /path/to/plan/file/to/read/stash/myplan.tfplan
   tasks:
 
     - name: Stash the Terraform plan file into variable "{{ module_plan_stash_var_name_val }}"
@@ -36,7 +36,7 @@ First create playbook below to stash the terraform plan and store it to ansible 
       vars:
         module_plan_stash_operation: stash
         module_plan_stash_var_name: "{{ module_plan_stash_var_name_val }}" # if not provided, defaults to "terraform_plan"
-        module_plan_stash_plan_file_path: "{{ module_plan_stash_generate_plan_file_name_val }}"
+        module_plan_stash_plan_file_path: "{{ module_plan_stash_plan_file_name_val }}"
 ```
 
 Now, to use the stashed variable containing Terraform plan, create the playbook below
