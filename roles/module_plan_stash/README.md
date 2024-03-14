@@ -26,42 +26,17 @@ First create playbook below to stash the terraform plan and store it to ansible 
   hosts: localhost
   gather_facts: true
   vars:
-    terraform_existing_config_url: "https://raw.githubusercontent.com/url/of/stored/config/file/main.tf"
-    terraform_existing_plan_url: "https://raw.githubusercontent.com/url/of/stored/plan/file/myplan.tfplan"
+    module_plan_stash_var_name_val: my_test_stashed_plan
+    module_plan_stash_generate_plan_file_name_val: /path/to/plan/file/to/read/stash/myplan.tfplan
   tasks:
-    - name: Create temporary directory to run terraform configuration
-      ansible.builtin.tempfile:
-        state: directory
-      register: tfdir
 
-    - name: Block for cloud.terraform_ops.module_plan_stash example (stash functionality)
-      block:
-        - name: Download Terraform configuration
-          uri:
-            dest: "{{ tfdir.path }}/main.tf"
-            url: "{{ terraform_existing_config_url }}"
-          when: terraform_existing_config_url is defined and terraform_existing_config_url | length != 0
-
-        - name: Download terraform plan file and store to temp dir as "myplan.tfplan"
-          uri:
-             dest: "{{ tfdir.path }}/myplan.tfplan"
-             url: "{{ terraform_existing_plan_url }}"
-          when: terraform_existing_plan_url is defined and terraform_existing_plan_url | length != 0
-
-        - name: Stash the Terraform plan file into variable "my_test_stashed_plan"
-          ansible.builtin.include_role:
-            name: cloud.terraform_ops.module_plan_stash
-          vars:
-            module_plan_stash_operation: stash
-            module_plan_stash_var_name: "my_test_stashed_plan" # if not provided, defaults to "terraform_plan"
-            module_plan_stash_plan_file_path: "{{ tfdir.path }}/myplan.tfplan"
-
-      always:
-
-        - name: Delete temporary directory
-          ansible.builtin.file:
-            state: absent
-            path: "{{ tfdir.path }}"
+    - name: Stash the Terraform plan file into variable "{{ module_plan_stash_var_name_val }}"
+      ansible.builtin.include_role:
+        name: cloud.terraform_ops.module_plan_stash
+      vars:
+        module_plan_stash_operation: stash
+        module_plan_stash_var_name: "{{ module_plan_stash_var_name_val }}" # if not provided, defaults to "terraform_plan"
+        module_plan_stash_plan_file_path: "{{ module_plan_stash_generate_plan_file_name_val }}"
 ```
 
 Now, to use the stashed variable containing Terraform plan, create the playbook below
@@ -69,30 +44,18 @@ Now, to use the stashed variable containing Terraform plan, create the playbook 
 ---
 - name: Test the cloud.terraform_ops.module_plan_stash role (load functionality)
   hosts: localhost
-  gather_facts: true
+  gather_facts: false
   vars:
+    module_plan_stash_var_name_val: my_test_stashed_plan
+    module_plan_stash_plan_file_path_val: /path/to/plan/file/to/load/create/loaded.tfplan
   tasks:
-    - name: Create temporary directory to run terraform configuration
-      ansible.builtin.tempfile:
-        suffix: '.tf'
-        state: directory
-      register: tfdir
-
-    - name: Block for cloud.terraform_ops.module_plan_stash example (load functionality)
-      block:
-        - name: Stash the Terraform plan file into variable "my_test_stashed_plan"
-          ansible.builtin.include_role:
-            name: cloud.terraform_ops.module_plan_stash
-          vars:
-            module_plan_stash_operation: load
-            module_plan_stash_var_name: "my_test_stashed_plan" # if not provided, defaults to "terraform_plan"
-            module_plan_stash_plan_file_path: "{{ tfdir.path }}/loaded_plan_file.tfplan"
-
-      always:
-        - name: Delete temporary directory
-          ansible.builtin.file:
-            state: absent
-            path: "{{ tfdir.path }}"
+    - name: Create a gcs bucket for Terraform remote backend
+      ansible.builtin.include_role:
+        name: cloud.terraform_ops.module_plan_stash
+      vars:
+        module_plan_stash_operation: load
+        module_plan_stash_var_name: "{{ module_plan_stash_var_name_val }}" # if not provided, defaults to "terraform_plan"
+        module_plan_stash_plan_file_path: "{{ module_plan_stash_plan_file_path_val }}" #"path_to_my_plan_file"
 ```
 
 Finally, add the above playbooks as "Job Templates", use the templates when creating a "Workflow Template".
