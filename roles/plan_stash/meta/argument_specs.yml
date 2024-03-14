@@ -8,7 +8,7 @@ argument_specs:
       - Perform base64-encoding of a terraform plan file and saves it into playbook execution stats similar to M(ansible.builtin.set_stats) module.
       - Perform base64-decoding of a terraform plan file from a variable defined into ansible facts and write them into a file specified by the user.
     options:
-      module_plan_stash_operation:
+      plan_stash_operation:
         description:
           - Whether to base64-encode the terraform plan file and save it into ansible stats or base64-decode data from variable/binary_data to create a terraform plan file.
         choices:
@@ -16,13 +16,13 @@ argument_specs:
           - load
         required: true
         type: str
-      module_plan_stash_plan_file_path:
+      plan_stash_plan_file_path:
         description:
           - The path to the terraform plan file.
-          - This will be used for both encoding/decoding plan file depending on the value set into module_plan_stash_operation.
+          - This will be used for both encoding/decoding plan file depending on the value set into plan_stash_operation.
         required: true
         type: str
-      module_plan_stash_var_name:
+      plan_stash_var_name:
         description:
           - -When O(state=stash), this parameter defines the variable name to be set into stats.
           - When O(state=load), this parameter defines the variable from ansible facts containing the base64-encoded data of the terraform plan file.
