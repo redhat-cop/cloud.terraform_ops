@@ -10,7 +10,7 @@ argument_specs:
     options:
       plan_stash_operation:
         description:
-          - Whether to base64-encode the terraform plan file and save it into ansible stats or base64-decode data from variable/binary_data to create a terraform plan file.
+          - Whether to base64-encode the terraform plan file and save it into ansible stats or base64-decode data from variable to create a terraform plan file.
         choices:
           - stash
           - load

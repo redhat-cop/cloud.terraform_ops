@@ -4,5 +4,4 @@
     path: "{{ plan_stash_plan_file_path }}"
     state: load
     var_name: "{{ plan_stash_var_name | default(omit) }}"  # default value terraform_plan is used by module itself, not required to specify here
-    binary_data: "{{ binary_data | default(omit) }}"
   no_log: true
