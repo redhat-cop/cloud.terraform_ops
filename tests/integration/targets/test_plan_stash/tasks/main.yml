@@ -40,7 +40,7 @@
           - encoded_data == stashed_data
 
     # Load the terraform plan file
-    - name:  Load the stashed terraform plan into a plan file using var_name
+    - name: Load the stashed terraform plan into a plan file using var_name
       ansible.builtin.include_role:
         name: cloud.terraform_ops.plan_stash
       vars:
