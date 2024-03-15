@@ -19,7 +19,7 @@ plan_stash_var_name| -When O(state=stash), this parameter defines the variable n
 
 Below example describes scenario of using the role in Ansible Controller workflow templates.
 
-First create playbook below to stash the terraform plan and store it to ansible stats into variable "my_test_stashed_plan"
+First create playbook below to create and stash the terraform plan and store it to ansible stats into variable "my_test_stashed_plan"
 ```
 ---
 - name: Test the cloud.terraform_ops.plan_stash role (stash functionality)
@@ -29,6 +29,13 @@ First create playbook below to stash the terraform plan and store it to ansible 
     plan_stash_var_name_val: my_test_stashed_plan
     plan_stash_plan_file_name_val: /path/to/plan/file/to/read/stash/myplan.tfplan
   tasks:
+    - name: Generate planfile by running Terraform plan
+      cloud.terraform.terraform:
+        project_path: /path/to/tf/project/directory/
+        force_init: true
+        plan_file: "{{ plan_stash_generate_plan_file_name_val }}"
+        state: present
+      check_mode: true
 
     - name: Stash the Terraform plan file into variable "{{ plan_stash_var_name_val }}"
       ansible.builtin.include_role:
@@ -36,10 +43,10 @@ First create playbook below to stash the terraform plan and store it to ansible 
       vars:
         plan_stash_operation: stash
         plan_stash_var_name: "{{ plan_stash_var_name_val }}" # if not provided, defaults to "terraform_plan"
-        plan_stash_plan_file_path: "{{ plan_stash_plan_file_name_val }}"
+        plan_stash_plan_file_path: "{{ plan_stash_generate_plan_file_name_val }}"
 ```
 
-Now, to use the stashed variable containing Terraform plan, create the playbook below
+Now, to use the stashed variable containing Terraform plan, load plan to a plan file, and apply the plan, create the playbook below
 ```
 ---
 - name: Test the cloud.terraform_ops.plan_stash role (load functionality)
@@ -47,15 +54,22 @@ Now, to use the stashed variable containing Terraform plan, create the playbook 
   gather_facts: false
   vars:
     plan_stash_var_name_val: my_test_stashed_plan
-    plan_stash_plan_file_path_val: /path/to/plan/file/to/load/create/loaded.tfplan
+    plan_stash_plan_file_path_val: /path/to/plan/file/to/load/plan/from/stashed/var/loaded.tfplan
   tasks:
-    - name: Create a gcs bucket for Terraform remote backend
+    - name:  Load the Terraform plan from variable "{{ plan_stash_var_name_val }}" into file "{{       plan_stash_plan_file_path_val }}"
       ansible.builtin.include_role:
         name: cloud.terraform_ops.plan_stash
       vars:
         plan_stash_operation: load
         plan_stash_var_name: "{{ plan_stash_var_name_val }}" # if not provided, defaults to "terraform_plan"
-        plan_stash_plan_file_path: "{{ plan_stash_plan_file_path_val }}" #"path_to_my_plan_file"
+        plan_stash_plan_file_path: "{{ plan_stash_plan_file_path_val }}"
+
+    - name: Apply the Terraform configuration
+      cloud.terraform.terraform:
+        project_path: /path/to/tf/project/directory/
+        plan_file: "{{ plan_stash_plan_file_path_val }}"
+        force_init: true
+        state: present
 ```
 
 Finally, add the above playbooks as "Job Templates", use the templates when creating a "Workflow Template".
