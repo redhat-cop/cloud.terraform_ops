@@ -1,0 +1,5 @@
+---
+- name: Run 'plan_stash' role
+  block:
+    - name: Include task file to perform specified action
+      ansible.builtin.include_tasks: "{{ plan_stash_operation }}.yml"

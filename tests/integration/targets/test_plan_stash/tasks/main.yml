@@ -1,0 +1,60 @@
+- name: Create temporary directory to work in
+  ansible.builtin.tempfile:
+    state: directory
+    suffix: .tfplan
+  register: test_dir
+
+- name: Run tests
+  block:
+    - name: Copy terraform configuration into working directory
+      copy:
+        src: main.tf
+        dest: "{{ test_dir.path }}"
+
+    - name: Run terraform plan
+      cloud.terraform.terraform:
+        force_init: true
+        project_path: "{{ test_dir.path }}"
+        plan_file: "{{ test_dir.path }}/terraform.tfplan"
+      check_mode: true
+
+    - set_fact:
+        encoded_data: "{{ lookup('file', test_dir.path + '/terraform.tfplan') | b64encode }}"
+
+    # Stash the terraform plan file
+    - name: Stash the terraform plan into a custom variable name
+      ansible.builtin.include_role:
+        name: cloud.terraform_ops.plan_stash
+      vars:
+        plan_stash_operation: stash
+        plan_stash_var_name: "{{ plan_stash_var_name_val }}"
+        plan_stash_plan_file_path: "{{ test_dir.path }}/terraform.tfplan"
+
+    - name: Save stashed base64-encoded plan data into ansible variable
+      set_fact:
+        stashed_data: "{{ plan_stash_stash_result.ansible_stats.data[plan_stash_var_name_val] }}"
+
+    - name: Ensure that manually encoded encoded_data and stashed using role stashed_data are equal
+      assert:
+        that:
+          - encoded_data == stashed_data
+
+    # Load the terraform plan file
+    - name: Load the stashed terraform plan into a plan file using var_name
+      ansible.builtin.include_role:
+        name: cloud.terraform_ops.plan_stash
+      vars:
+        plan_stash_operation: load
+        plan_stash_var_name: stashed_data
+        plan_stash_plan_file_path: "{{ test_dir.path }}/load.tfplan"
+
+    - name: Ensure the terraform plan file has been loaded with the original content
+      assert:
+        that:
+          - lookup('file', test_dir.path + '/load.tfplan') == lookup('file', test_dir.path + '/terraform.tfplan')
+
+  always:
+    - name: Delete temporary directory
+      ansible.builtin.file:
+        path: "{{ test_dir.path }}"
+        state: absent

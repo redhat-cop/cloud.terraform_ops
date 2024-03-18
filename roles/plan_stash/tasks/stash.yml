@@ -1,0 +1,8 @@
+---
+- name: Encode terraform plan file into variable "{{ plan_stash_var_name | default('terraform_plan') }}"
+  cloud.terraform.plan_stash:
+    path: "{{ plan_stash_plan_file_path }}"
+    state: stash
+    var_name: "{{ plan_stash_var_name | default(omit) }}"  # default value terraform_plan is used by module itself, not required to specify here
+  no_log: true
+  register: plan_stash_stash_result
