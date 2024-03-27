@@ -18,9 +18,6 @@ tags:
   - cloud
   - infrastructure
   - cluster
-dependencies:
-  amazon.aws: '>=7.0.0'
-  community.aws: '>=7.1.0'
 version: 1.0.0
 build_ignore:
   - .DS_Store

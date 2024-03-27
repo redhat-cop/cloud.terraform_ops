@@ -37,6 +37,7 @@ Name | Description
 
 - The [azure.azcollection](https://github.com/ansible-collections/azure) collection MUST be installed to use the role [cloud.terraform_ops.azurerm_backend](https://github.com/redhat-cop/cloud.terraform_ops/tree/main/roles/azurerm_backend/README.md).
 
+- The [cloud.terraform](https://github.com/ansible-collections/cloud.terraform) collection MUST be installed to use the role [cloud.terraform_ops.plan_stash](https://github.com/redhat-cop/cloud.terraform_ops/tree/main/roles/cloud.terraform_ops.plan_stash/README.md).
 
 ### Installation
 
