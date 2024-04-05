@@ -1,0 +1,46 @@
+---
+# tasks file for terraform
+- name: Create folder /tmp/terraform
+  ansible.builtin.file:
+    path: /tmp/terraform
+    state: directory
+    mode: "0755"
+  notify:
+    - Terraform init
+
+- name: Copy file versions.tf to /tmp/terraform
+  ansible.builtin.copy:
+    src: "{{ virt_manager }}-versions.tf"
+    dest: /tmp/terraform/versions.tf
+    mode: "0644"
+  notify:
+    - Terraform init
+
+- name: Generate cloud templates from list
+  ansible.builtin.template:
+    src: "{{ item.name }}.j2"
+    dest: "/tmp/terraform/{{ item.name }}"
+    mode: "0644"
+  loop: "{{ cloud_files }}"
+
+- name: Generate templates from list
+  ansible.builtin.template:
+    src: "{{ virt_manager }}-{{ item.src }}"
+    dest: "/tmp/terraform/{{ virt_manager }}-{{ item.dest }}"
+    mode: "0644"
+  loop: "{{ terraform_templates }}"
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Terraform apply
+  cloud.terraform.terraform:
+    project_path: /tmp/terraform
+    state: present
+
+- name: Cleanup tmp directory when cleanup is true
+  ansible.builtin.file:
+    path: /tmp/terraform
+    state: absent
+  when: cleanup | default(false)
+...

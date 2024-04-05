@@ -1,0 +1,7 @@
+provider "esxi" {
+  esxi_hostname      = "{{ esxi_host }}"
+  esxi_hostport      = "{{ esxi_port | default(22) }}"
+  esxi_hostssl       = "{{ esxi_ssl_port | default(443) }}"
+  esxi_username      = "{{ esxi_user }}"
+  esxi_password      = "{{ esxi_pass }}"
+}
