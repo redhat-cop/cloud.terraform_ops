@@ -3,14 +3,14 @@
   amazon.aws.iam_user_info:
     name: "{{ (aws_s3backend_iam_type == 'user') | ternary(aws_s3backend_iam_name, omit) }}"
     group: "{{ (aws_s3backend_iam_type == 'group') | ternary(aws_s3backend_iam_name, omit) }}"
-    region: "{{ aws_s3backend_region }}"
+    region: "{{ aws_s3backend_region | default(omit) }}"
   register: users
 
 - name: Create IAM group
   amazon.aws.iam_group:
     name: "{{ aws_s3backend_iam_name }}"
     state: present
-    region: "{{ aws_s3backend_region }}"
+    region: "{{ aws_s3backend_region | default(omit) }}"
   when:
     - aws_s3backend_iam_type == "group"
     - users.iam_users | length == 0
@@ -19,7 +19,7 @@
   amazon.aws.iam_user:
     name: "{{ aws_s3backend_iam_name }}"
     state: present
-    region: "{{ aws_s3backend_region }}"
+    region: "{{ aws_s3backend_region | default(omit) }}"
   when:
     - aws_s3backend_iam_type == "user"
     - users.iam_users | length == 0
@@ -30,4 +30,4 @@
     iam_name: "{{ aws_s3backend_iam_name }}"
     policy_name: "{{ aws_s3backend_policy_name }}"
     policy_json: "{{ lookup('template', 'policy.json.j2') }}"
-    region: "{{ aws_s3backend_region }}"
+    region: "{{ aws_s3backend_region | default(omit) }}"
