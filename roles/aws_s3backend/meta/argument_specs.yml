@@ -18,6 +18,7 @@ argument_specs:
       aws_s3backend_region:
         description:
           - The AWS region.
+          - Default to environment variable AWS_REGION.
       aws_s3backend_bucket_name:
         description:
           - The name of the S3 bucket to create/delete.
