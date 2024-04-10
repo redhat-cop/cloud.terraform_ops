@@ -11,7 +11,6 @@
     name: "{{ aws_s3backend_bucket_name }}"
     bucket_facts:
       bucket_versioning: true
-    region: "{{ aws_region }}"
   register: testbucket
 
 - name: Validate that s3 bucket was delete
@@ -23,7 +22,6 @@
 - name: Read dynamodb table info
   community.aws.dynamodb_table_info:
     name: "{{ aws_s3backend_dynamodb_table_name }}"
-    region: "{{ aws_region }}"
   register: table_info
 
 - name: Assert that the dynamodb table was deleted

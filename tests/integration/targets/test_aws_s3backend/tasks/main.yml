@@ -1,6 +1,7 @@
 ---
 - module_defaults:
     group/aws:
+      region: "{{ aws_region | default(omit) }}"
       access_key: "{{ aws_access_key }}"
       secret_key: "{{ aws_secret_key }}"
       session_token: "{{ security_token | default(omit) }}"

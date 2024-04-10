@@ -27,7 +27,6 @@
       amazon.aws.s3_object_info:
         bucket_name: "{{ aws_s3backend_bucket_name }}"
         object_name: "{{ tfstate_file_path }}"
-        region: "{{ aws_region }}"
       register: object_info
 
   always:
