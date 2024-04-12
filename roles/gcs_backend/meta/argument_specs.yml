@@ -19,7 +19,7 @@ argument_specs:
       gcs_backend_gcp_project:
         description:
           - The ID of the Google Cloud Platform project to use.
-        required: true
+          - You can set this using the E(GCP_PROJECT) env variable.
         type: str
       gcs_backend_bucket_name:
         description:
@@ -29,14 +29,16 @@ argument_specs:
       gcs_backend_auth_kind:
         description:
           - The type of credential used.
-        required: true
+          - You can set this using the E(GCP_AUTH_KIND) env variable.
         type: str
       gcs_backend_service_account_file:
         description:
           - The path of a Service Account JSON file if serviceaccount is selected as type.
-          - required when `gcs_backend_auth_kind = serviceaccount`.
+          - required when V(gcs_backend_auth_kind=serviceaccount).
+          - You can set this using the E(GCP_SERVICE_ACCOUNT_FILE) env variable.
         type: str
       gcs_backend_service_account_email:
         description:
           - The service account email used for authentication.
+          - You can set this using the E(GCP_SERVICE_ACCOUNT_EMAIL) env variable.
         type: str

@@ -14,6 +14,7 @@ AWS User Account with permission to create S3 bucket, DynamoDB table and IAM pol
 Name | Description | Type | Default | Required
 --- | --- | --- | --- | ---
 aws_s3backend_operation|Whether to create or delete the Backend resources (S3 bucket and DynamoDB table). Choices: 'create', 'delete'.|string|create| N/A
+aws_s3backend_region|The AWS region.|string|Environment variable AWS_REGION|No
 aws_s3backend_bucket_name|The name of the S3 bucket to create/delete.|string|N/A|Yes
 aws_s3backend_dynamodb_table_name|The name of the DynamoDB table to create/delete for state locking. The table will be created with a partition key named LockID with type of String|string|N/A|No
 aws_s3backend_iam_type|The type of IAM resource to grant access to. Choices: 'user', 'group', 'role'|string|N/A|No
