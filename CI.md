@@ -2,7 +2,7 @@
 
 ## cloud.terraform_ops Collection
 
-GitHub Actions are used to run the Continuous Integration for redhat-cop/cloud.terraform_ops collection. The workflows used for the CI can be found [here](https://github.com/redhat-cop/cloud.terraform_ops/tree/main/.github/workflows). These workflows include jobs to run the sanity tests, linters and changelog check. The following table lists the Python and Ansible versions against which these jobs are run.
+GitHub Actions are used to run the Continuous Integration for redhat-cop/cloud.terraform_ops collection. The workflows used for the CI can be found [here](https://github.com/redhat-cop/cloud.terraform_ops/tree/stable-1/.github/workflows). These workflows include jobs to run the sanity tests, linters and changelog check. The following table lists the Python and Ansible versions against which these jobs are run.
 
 | Jobs | Description | Python Versions | Ansible Versions |
 | ------ |-------| ------ | -----------|

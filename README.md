@@ -22,10 +22,10 @@ Click on the name of a role or playbook to view that content's documentation:
 ### Roles
 Name | Description
 --- | ---
-[cloud.terraform_ops.aws_s3backend](https://github.com/redhat-cop/cloud.terraform_ops/blob/main/roles/aws_s3backend/README.md)|A role to create the necessary AWS infrastructure for an S3 remote backend for Terraform.
-[cloud.terraform_ops.gcs_backend](https://github.com/redhat-cop/cloud.terraform_ops/blob/main/roles/gcs_backend/README.md)|A role to create the necessary Google Cloud infrastructure for a Google Cloud Storage (GCS) remote backend for Terraform.
-[cloud.terraform_ops.azurerm_backend](https://github.com/redhat-cop/cloud.terraform_ops/tree/main/roles/azurerm_backend/README.md)|A role to create/delete the necessary Azure infrastructure for an Azurerm remote backend for Terraform.
-[cloud.terraform_ops.plan_stash](https://github.com/redhat-cop/cloud.terraform_ops/tree/main/roles/plan_stash/README.md)|A role to handle the base64 encoding or decoding of a terraform plan file using cloud.terraform.plan_stash module.
+[cloud.terraform_ops.aws_s3backend](https://github.com/redhat-cop/cloud.terraform_ops/blob/stable-1/roles/aws_s3backend/README.md)|A role to create the necessary AWS infrastructure for an S3 remote backend for Terraform.
+[cloud.terraform_ops.gcs_backend](https://github.com/redhat-cop/cloud.terraform_ops/blob/stable-1/roles/gcs_backend/README.md)|A role to create the necessary Google Cloud infrastructure for a Google Cloud Storage (GCS) remote backend for Terraform.
+[cloud.terraform_ops.azurerm_backend](https://github.com/redhat-cop/cloud.terraform_ops/tree/stable-1/roles/azurerm_backend/README.md)|A role to create/delete the necessary Azure infrastructure for an Azurerm remote backend for Terraform.
+[cloud.terraform_ops.plan_stash](https://github.com/redhat-cop/cloud.terraform_ops/tree/stable-1/roles/plan_stash/README.md)|A role to handle the base64 encoding or decoding of a terraform plan file using cloud.terraform.plan_stash module.
 
 ## Installation and Usage
 
@@ -37,7 +37,7 @@ Name | Description
 
 - The [azure.azcollection](https://github.com/ansible-collections/azure) collection MUST be installed to use the role [cloud.terraform_ops.azurerm_backend](https://github.com/redhat-cop/cloud.terraform_ops/tree/main/roles/azurerm_backend/README.md).
 
-- The [cloud.terraform](https://github.com/ansible-collections/cloud.terraform) collection MUST be installed to use the role [cloud.terraform_ops.plan_stash](https://github.com/redhat-cop/cloud.terraform_ops/tree/main/roles/cloud.terraform_ops.plan_stash/README.md).
+- The [cloud.terraform](https://github.com/ansible-collections/cloud.terraform) collection MUST be installed to use the role [cloud.terraform_ops.plan_stash](https://github.com/redhat-cop/cloud.terraform_ops/tree/stable-1/roles/cloud.terraform_ops.plan_stash/README.md).
 
 ### Installation
 
@@ -108,10 +108,10 @@ If you want to run AWS cloud integration tests, ensure you log in :
 
 Once credentials are set up, run all integration tests with `ansible-test integration` or run a subset of integration tests with `ansible-test integration <target>`.
 
-This collection is tested using GitHub Actions. To know more about CI, refer to [CI.md](https://github.com/https://github.com/redhat-cop/cloud.terraform_ops/blob/main/CI.md).
+This collection is tested using GitHub Actions. To know more about CI, refer to [CI.md](https://github.com/https://github.com/redhat-cop/cloud.terraform_ops/blob/stable-1/CI.md).
 
 ## License
 
 GNU General Public License v3.0 or later
 
-See [LICENSE](https://github.com/redhat-cop/cloud.terraform_ops/blob/main/LICENSE) to see the full text.
+See [LICENSE](https://github.com/redhat-cop/cloud.terraform_ops/blob/stable-1/LICENSE) to see the full text.
