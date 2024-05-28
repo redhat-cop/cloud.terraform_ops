@@ -77,3 +77,13 @@ When the workflow is run, below actions take place
 - The first playbook stores b64encoded Terraform Plan into ansible stats (Artifacts) named "plan_stash_var_name"
 - The second playbook uses artificats from first playbook to pass b64encoded plan as variable named "plan_stash_var_name"
 - The second playbook loads the variable and creates a file I(plan_stash_plan_file_path) and writes the Terraform Plan to it, which can be used further through collections such as [cloud.terraform collection](https://github.com/ansible-collections/cloud.terraform)
+
+## License
+
+GNU General Public License v3.0 or later
+
+See [LICENCE](https://github.com/redhat-cop/cloud.terraform_ops/blob/stable-1/LICENSE) to see the full text.
+
+## Author Information
+
+- Ansible Cloud Content Team

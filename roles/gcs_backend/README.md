@@ -47,7 +47,7 @@ Note: When using this role in AAP, authentication to Google Cloud Platform (GCP)
 
 GNU General Public License v3.0 or later
 
-See [LICENCE](https://github.com/redhat-cop/cloud.terraform_ops/blob/main/LICENSE) to see the full text.
+See [LICENCE](https://github.com/redhat-cop/cloud.terraform_ops/blob/stable-1/LICENSE) to see the full text.
 
 ## Author Information
 
