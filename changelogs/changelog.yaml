@@ -1,0 +1,28 @@
+ancestor: null
+releases:
+  1.0.0:
+    changes:
+      release_summary: This first release includes several roles to create/configure
+        Cloud providers' resources for Red Hat Ansible Automation Platform Terraform
+        integration.
+    fragments:
+    - release_summary.yml
+    objects:
+      role:
+      - description: A role to create/delete the AWS infrastructure for an S3 remote
+          backend for Terraform.
+        name: aws_s3backend
+        namespace: null
+      - description: A role to create/delete the necessary Azure infrastructure for
+          an Azurerm remote backend for Terraform.
+        name: azurerm_backend
+        namespace: null
+      - description: A role to create/delete the GCP infrastructure for a GCS remote
+          backend for Terraform.
+        name: gcs_backend
+        namespace: null
+      - description: A role to handle the base64 encoding or decoding of a terraform
+          plan file using cloud.terraform.plan_stash module.
+        name: plan_stash
+        namespace: null
+    release_date: '2024-05-28'
