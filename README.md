@@ -142,7 +142,7 @@ See the [raw generated changelog](https://github.com/redhat-cop/cloud.terraform_
 ## Related Information
 
  - [Ansible User guide](https://docs.ansible.com/ansible/latest/user_guide/index.html).
- -  [Ansible Rulebook documentation](https://ansible.readthedocs.io/projects/rulebook/en/stable/index.html).
+ - [Ansible Rulebook documentation](https://ansible.readthedocs.io/projects/rulebook/en/stable/index.html).
  - [Ansible Community code of conduct](https://docs.ansible.com/ansible/latest/community/code_of_conduct.html)
 
 ## License
