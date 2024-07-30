@@ -97,7 +97,7 @@ Once installed, you can reference the cloud.terraform_ops collection content by 
 We welcome community contributions to this collection. If you find problems, please open an issue or create a PR against this collection repository.
 See [CONTRIBUTING.md](https://github.com/redhat-cop/cloud.terraform_ops/blob/main/CONTRIBUTING.md) for more details.
 
-## Testing and Development
+## Testing
 
 The project uses `ansible-lint` and `black`.
 Assuming this repository is checked out in the proper structure,
