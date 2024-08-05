@@ -6,12 +6,12 @@ description: >-
   resources as part of AAP Terraform integration.
 documentation: ''
 homepage: ''
-issues: https://github.com/ansible-collections/cloud.terraform_ops/issues
+issues: https://github.com/redhat-cop/cloud.terraform_ops/issues
 license_file: LICENSE
 namespace: cloud
 name: terraform_ops
 readme: README.md
-repository: https://github.com/ansible-collections/cloud.terraform_ops
+repository: https://github.com/redhat-cop/cloud.terraform_ops
 tags:
   - amazon
   - aws
