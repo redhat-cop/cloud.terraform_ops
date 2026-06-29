@@ -87,7 +87,7 @@ jobs:
 
       # Install Terraform binary
       - name: Install Terraform binary
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd  # v3, committed on Aug 19, 2024
         with:
           terraform_wrapper: false
           terraform_version: ">1.7.0"
