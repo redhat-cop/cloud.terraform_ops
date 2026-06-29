@@ -4,7 +4,7 @@
     name: "{{ (aws_s3backend_iam_type == 'user') | ternary(aws_s3backend_iam_name, omit) }}"
     group: "{{ (aws_s3backend_iam_type == 'group') | ternary(aws_s3backend_iam_name, omit) }}"
     region: "{{ aws_s3backend_region | default(omit) }}"
-  register: users
+  register: aws_s3backend_users
 
 - name: Create IAM group
   amazon.aws.iam_group:
@@ -13,7 +13,7 @@
     region: "{{ aws_s3backend_region | default(omit) }}"
   when:
     - aws_s3backend_iam_type == "group"
-    - users.iam_users | length == 0
+    - aws_s3backend_users.iam_users | length == 0
 
 - name: Create IAM user
   amazon.aws.iam_user:
@@ -22,7 +22,7 @@
     region: "{{ aws_s3backend_region | default(omit) }}"
   when:
     - aws_s3backend_iam_type == "user"
-    - users.iam_users | length == 0
+    - aws_s3backend_users.iam_users | length == 0
 
 - name: Assign policy to the IAM user/group
   amazon.aws.iam_policy:

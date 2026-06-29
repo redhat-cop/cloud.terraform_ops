@@ -7,15 +7,15 @@
 - name: Check if resource group exists
   azure.azcollection.azure_rm_resourcegroup_info:
     name: "{{ azurerm_backend_resource_group_name }}"
-  register: rg_info
+  register: azurerm_backend_rg_info
 
 - name: Set variable for resource group id
   ansible.builtin.set_fact:
-    azurerm_backend_resource_group_id: "{{ rg_info.resourcegroups.0.id }}"
-  when: rg_info.resourcegroups | length > 0
+    azurerm_backend_resource_group_id: "{{ azurerm_backend_rg_info.resourcegroups.0.id }}"
+  when: azurerm_backend_rg_info.resourcegroups | length > 0
 
 - name: Create resource group
-  when: rg_info.resourcegroups | length == 0
+  when: azurerm_backend_rg_info.resourcegroups | length == 0
   block:
     - name: Ensure the resource group location is defined
       ansible.builtin.fail:
@@ -26,43 +26,43 @@
       azure.azcollection.azure_rm_resourcegroup:
         name: "{{ azurerm_backend_resource_group_name }}"
         location: "{{ azurerm_backend_location }}"
-      register: create_resource_group
+      register: azurerm_backend_create_resource_group
 
     - name: Set variable for resource group id
       ansible.builtin.set_fact:
-        azurerm_backend_resource_group_id: "{{ create_resource_group.state.id }}"
+        azurerm_backend_resource_group_id: "{{ azurerm_backend_create_resource_group.state.id }}"
 
 - name: List existing storage accounts
   azure.azcollection.azure_rm_storageaccount_info:
     resource_group: "{{ azurerm_backend_resource_group_name }}"
     name: "{{ azurerm_backend_storage_account_name | default(omit) }}"
-  register: storage_accounts
+  register: azurerm_backend_storage_accounts
 
 - name: Set Storage account name variable if storage account present
   ansible.builtin.set_fact:
-    azurerm_backend_storage_account_name: "{{ storage_accounts.storageaccounts.0.name }}"
+    azurerm_backend_storage_account_name: "{{ azurerm_backend_storage_accounts.storageaccounts.0.name }}"
   when:
     - azurerm_backend_storage_account_name is undefined
-    - storage_accounts.storageaccounts | length > 0
+    - azurerm_backend_storage_accounts.storageaccounts | length > 0
 
 - name: Generate name for the storage account name
   when:
     - azurerm_backend_storage_account_name is undefined
-    - storage_accounts.storageaccounts | length == 0
+    - azurerm_backend_storage_accounts.storageaccounts | length == 0
   block:
     - name: Create Storage account
       azure.azcollection.azure_rm_storageaccount:
         resource_group: "{{ azurerm_backend_resource_group_name }}"
         name: "{{ lookup('ansible.builtin.password', '/dev/null', chars=['ascii_lowercase', 'digits'], length=12) }}"
         type: "{{ azurerm_backend_storage_account_type }}"
-      register: create_storage
+      register: azurerm_backend_create_storage
       retries: 300
       delay: 1
-      until: create_storage is successful
+      until: azurerm_backend_create_storage is successful
 
     - name: Set Storage account name variable
       ansible.builtin.set_fact:
-        azurerm_backend_storage_account_name: "{{ create_storage.state.name }}"
+        azurerm_backend_storage_account_name: "{{ azurerm_backend_create_storage.state.name }}"
 
 - name: Create Storage account
   azure.azcollection.azure_rm_storageaccount:
@@ -71,7 +71,7 @@
     type: "{{ azurerm_backend_storage_account_type }}"
   when:
     - azurerm_backend_storage_account_name is defined
-    - storage_accounts.storageaccounts | length == 0
+    - azurerm_backend_storage_accounts.storageaccounts | length == 0
 
 - name: Create Container
   azure.azcollection.azure_rm_storageblob:

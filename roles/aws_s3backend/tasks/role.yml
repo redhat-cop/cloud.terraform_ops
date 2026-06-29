@@ -3,7 +3,7 @@
   amazon.aws.iam_role_info:
     name: "{{ aws_s3backend_iam_name }}"
     region: "{{ aws_s3backend_region | default(omit) }}"
-  register: existing_roles
+  register: aws_s3backend_existing_roles
 
 - name: Create Role with policy
   amazon.aws.iam_role:
@@ -11,7 +11,7 @@
     assume_role_policy_document: "{{ lookup('file', 'role-policy.json') }}"
     state: present
     region: "{{ aws_s3backend_region | default(omit) }}"
-  when: existing_roles.iam_roles | length == 0
+  when: aws_s3backend_existing_roles.iam_roles | length == 0
 
 - name: Apply policy to Role
   amazon.aws.iam_policy:
