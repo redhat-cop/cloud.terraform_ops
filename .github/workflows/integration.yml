@@ -43,7 +43,11 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - splitter
-    if: ${{ needs.splitter.outputs.targets != '' }}
+    # check if the targets and jobs are not empty and the jobs are not an empty array
+    if: >-
+      ${{ needs.splitter.outputs.targets != '' &&
+      needs.splitter.outputs.test_jobs != '' &&
+      toJson(fromJson(needs.splitter.outputs.test_jobs)) != '[]' }}
     env:
       source: "./source"
       ansible_version: "milestone"
