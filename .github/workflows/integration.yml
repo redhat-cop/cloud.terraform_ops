@@ -97,7 +97,7 @@ jobs:
           terraform_version: ">1.7.0"
 
       - name: Pre install collections dependencies first so the collection install does not
-        run: ansible-galaxy collection install --pre '-r${{ env.source }}/tests/integration/requirements.yml' -p /home/runner/collections/
+        run: ansible-galaxy collection install --pre '-r${{ env.source }}/tests/integration/requirements.yml' -p /home/runner/.ansible/collections/
 
       - name: Build and install collection
         id: install
