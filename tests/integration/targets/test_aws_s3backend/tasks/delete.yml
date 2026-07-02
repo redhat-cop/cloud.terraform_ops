@@ -27,4 +27,4 @@
 - name: Assert that the dynamodb table was deleted
   ansible.builtin.assert:
     that:
-      - not table_info.table
+      - table_info.table.table_name is not defined

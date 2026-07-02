@@ -39,7 +39,7 @@
 - name: Assert that the table has been created with the required attributes
   ansible.builtin.assert:
     that:
-      - table_info.table
+      - table_info.table.table_name is defined
       - 'table_info.table.attribute_definitions == [{"attribute_name": "LockID", "attribute_type": "S"}]'
       - table_info.table.table_status == 'ACTIVE'
       - table_info.table.item_count == 0

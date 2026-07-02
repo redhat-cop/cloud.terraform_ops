@@ -1,6 +1,6 @@
 name: Integration
 on:
-  pull_request_target:
+  pull_request:
     types:
       - opened
       - reopened
@@ -12,49 +12,47 @@ on:
       - stable-*
 
 jobs:
-  safe-to-test:
-    if: ${{ github.event.label.name == 'safe to test' }} || ${{ github.event.action != 'labeled' }}
-    uses: ansible-network/github_actions/.github/workflows/safe-to-test.yml@main
   splitter:
-    needs:
-      - safe-to-test
     runs-on: ubuntu-latest
     env:
       source_dir: "cloud_terraformops"
     outputs:
-      test_targets: ${{ steps.splitter.outputs.test_targets }}
-      test_targets_json: ${{ steps.splitter.outputs.test_targets_json }}
-      test_jobs: ${{ steps.splitter.outputs.test_jobs }}
+      targets: ${{ steps.splitter.outputs.targets }}
+      test_jobs: ${{ steps.splitter.outputs.jobs }}
     steps:
       - name: Checkout collection
-        uses: actions/checkout@v3
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0  # v7, Committed on Jun 17, 2026
         with:
           path: ${{ env.source_dir }}
-          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: "0"
 
       - name: List changes for pull request
         id: splitter
-        uses: ansible-network/github_actions/.github/actions/ansible_test_splitter@main
+        uses: ansible/cloud-content-ci-automation/.github/actions/ansible_test_splitter@a93c78e1d842d4ee8961769110d88ac16bcc217a  # main, Commits on May 15, 2026
         with:
           collections_to_test: ${{ env.source_dir }}
           total_jobs: 2
+          base_ref: "${{ github.event.pull_request.base.ref }}"
 
       - name: Display splitter output
         run: |
-          echo "test_targets=${{ steps.splitter.outputs.test_targets }}"
-          echo "test_targets_json=${{ steps.splitter.outputs.test_targets_json }}"
-          echo "test_jobs=${{ steps.splitter.outputs.test_jobs }}"
+          echo "test_targets=${{ steps.splitter.outputs.targets }}"
+          echo "test_jobs=${{ steps.splitter.outputs.jobs }}"
         shell: bash
-  test:
+  integration_tests:
     runs-on: ubuntu-latest
     needs:
       - splitter
-    if: ${{ needs.splitter.outputs.test_targets != '' }}
+    # check if the targets and jobs are not empty and the jobs are not an empty array
+    if: >-
+      ${{ needs.splitter.outputs.targets != '' &&
+      needs.splitter.outputs.test_jobs != '' &&
+      toJson(fromJson(needs.splitter.outputs.test_jobs)) != '[]' }}
     env:
       source: "./source"
       ansible_version: "milestone"
-      python_version: "3.11"
+      python_version: "3.13"
+      ansible_test_splitter_targets: "${{ needs.splitter.outputs.targets }}"
     strategy:
       fail-fast: false
       matrix:
@@ -63,28 +61,23 @@ jobs:
     steps:
       - name: Read target
         id: read-targets
-        run: |
-          import json, os
-          with open(os.environ.get('GITHUB_OUTPUT'), "a", encoding="utf-8") as fh:
-              fh.write(f'ansible_test_targets={json.loads(os.environ.get("ALL_TEST_TARGETS")).get(os.environ.get("WORKFLOW_ID"))}\n')
-        shell: python
-        env:
-          ALL_TEST_TARGETS: ${{ needs.splitter.outputs.test_targets_json }}
-          WORKFLOW_ID: ${{ matrix.workflow-id }}
+        uses: ansible/cloud-content-ci-automation/.github/actions/ansible_read_targets@0b891487c4170ef856f02313c66cb1c776814c42  # main, committedon Apr 1, 2026
+        with:
+          job_id: "${{ matrix.workflow-id }}"
+          all_targets: "${{ env.ansible_test_splitter_targets }}"
 
       - name: Display ansible test targets
         run: |
-          echo "ansible_test_targets -> ${{ steps.read-targets.outputs.ansible_test_targets }}"
+          echo "ansible_test_targets -> ${{ steps.read-targets.outputs.job_targets }}"
         shell: bash
 
       - name: Checkout collection
-        uses: actions/checkout@v3
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0  # v7, Committed on Jun 17, 2026
         with:
           path: ${{ env.source }}
-          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Set up Python ${{ env.python_version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1  # v6.3.0, Committed on Jun 23, 2026
         with:
           python-version: ${{ env.python_version }}
 
@@ -98,13 +91,13 @@ jobs:
 
       # Install Terraform binary
       - name: Install Terraform binary
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd  # v3, committed on Aug 19, 2024
         with:
           terraform_wrapper: false
           terraform_version: ">1.7.0"
 
       - name: Pre install collections dependencies first so the collection install does not
-        run: ansible-galaxy collection install --pre '-r${{ env.source }}/tests/integration/requirements.yml' -p /home/runner/collections/
+        run: ansible-galaxy collection install --pre '-r${{ env.source }}/tests/integration/requirements.yml' -p /home/runner/.ansible/collections/
 
       - name: Build and install collection
         id: install
@@ -113,17 +106,8 @@ jobs:
           install_python_dependencies: false
           source_path: ${{ env.source }}
 
-      - name: Create AWS/sts session credentials
-        uses: ansible-network/github_actions/.github/actions/ansible_aws_test_provider@main
-        with:
-          collection_path: ${{ steps.install.outputs.collection_path }}
-          ansible_core_ci_key: ${{ secrets.ANSIBLE_CORE_CI_KEY }}
-
-      - name: Create AzureRM session credentials
-        uses: ansible-network/github_actions/.github/actions/ansible_azure_test_provider@main
-        with:
-          collection_path: ${{ steps.install.outputs.collection_path }}
-          ansible_core_ci_key: ${{ secrets.ANSIBLE_CORE_CI_KEY }}
+      - name: Create AWS/sts and AzureRM session credentials
+        uses: ansible/ansible-test-auth@008750a5bf07124c3ab86d30d73d7319d7518f36  # v1.0.0, committed on Mar 13, 2026
 
       # we use raw git to create a repository in the tests
       # this fails if the committer doesn't have a name and an email set
@@ -140,4 +124,4 @@ jobs:
           python_version: ${{ env.python_version }}
           ansible_version: ${{ env.ansible_version }}
           ansible_test_requirement_files: 'test-requirements.txt'
-          ansible_test_targets: ${{ steps.read-targets.outputs.ansible_test_targets }}
+          ansible_test_targets: ${{ steps.read-targets.outputs.job_targets }}
